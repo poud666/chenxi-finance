@@ -122,6 +122,29 @@
   font-size: 0.75rem;
   color: var(--text-mute);
 }
+.ind-desc {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  line-height: 1.65;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+.ind-desc b {
+  color: var(--accent);
+  font-weight: 600;
+}
+.block-desc {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin: -10px 0 24px;
+  max-width: 800px;
+}
+.block-desc b {
+  color: var(--accent);
+  font-weight: 600;
+}
 
 /* 付费墙 */
 .paywall {
