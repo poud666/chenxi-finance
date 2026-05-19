@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# Wrangler 本地缓存（含 token）
+worker/.wrangler/
+worker/node_modules/
+worker/.dev.vars
+
+# 私密配置
+.env
+*.env.local
