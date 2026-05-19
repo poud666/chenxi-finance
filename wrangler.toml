@@ -1,5 +1,5 @@
 # Cloudflare Pages 配置（前端 + Pages Functions API）
-name = "chenxi-finance"
+name = "marketalert"
 compatibility_date = "2024-09-01"
 pages_build_output_dir = "."
 
@@ -17,5 +17,5 @@ id = "fe888f22bfad4874a9f4a0b1a8c0ee1b"
 # 公开环境变量
 [vars]
 FROM_EMAIL = "onboarding@resend.dev"
-SITE_URL   = "https://chenxi-finance.pages.dev"
+SITE_URL   = "https://marketalert.pages.dev"
 PRICE_CNY  = "10"
