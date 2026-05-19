@@ -31,13 +31,13 @@
     <!-- 标题区 -->
     <header class="dash-header">
       <div>
-        <div class="dash-eyebrow"><span class="dot"></span>实时数据 · 演示版</div>
-        <h1>今日市场速览</h1>
-        <p class="dash-date">2026 年 5 月 14 日 · 周四</p>
+        <div class="dash-eyebrow"><span class="dot"></span><span data-updated>实时数据加载中...</span></div>
+        <h1>市场风险监控</h1>
+        <p class="dash-date">所有指标永久免费 · 警戒线自动判定</p>
       </div>
       <div class="dash-actions">
-        <button class="btn-ghost btn-sm">⟳ 刷新</button>
-        <a href="#" class="btn-primary btn-sm">📩 订阅每日邮件 ¥10/月</a>
+        <button class="btn-ghost btn-sm" data-refresh>⟳ 刷新</button>
+        <a href="index.html#pricing" class="btn-primary btn-sm">📩 订阅每日邮件 ¥10/月</a>
       </div>
     </header>
 
@@ -47,66 +47,10 @@
         <h2>⚡ 核心指标</h2>
         <span class="block-sub">每日必看 · 自动判断警戒线</span>
       </div>
-
-      <div class="ind-grid">
-        <!-- VIX -->
-        <div class="ind-card status-ok">
-          <div class="ind-name">VIX <span>恐慌指数</span></div>
-          <div class="ind-val">14.20</div>
-          <div class="ind-change green">▲ 0.32 (+2.3%)</div>
-          <div class="ind-bar"><div class="bar-fill" style="width:30%;background:var(--green)"></div></div>
-          <div class="ind-tag">正常区间 (12-20)</div>
-          <p class="ind-desc">标普 500 未来 30 天的隐含波动率。数值越高，市场越恐慌。<b>>25 紧张 · >30 恐慌</b>。</p>
-        </div>
-
-        <!-- MOVE -->
-        <div class="ind-card status-ok">
-          <div class="ind-name">MOVE <span>债券波动率</span></div>
-          <div class="ind-val">98</div>
-          <div class="ind-change red">▼ 2 (-2.0%)</div>
-          <div class="ind-bar"><div class="bar-fill" style="width:35%;background:var(--green)"></div></div>
-          <div class="ind-tag">正常区间 (80-100)</div>
-          <p class="ind-desc">"债券版 VIX"。美债利率的预期波动率，常先于股市预警系统性风险。<b>>120 紧张 · >150 危险</b>。</p>
-        </div>
-
-        <!-- 10Y -->
-        <div class="ind-card status-warn">
-          <div class="ind-name">10Y 美债 <span>收益率</span></div>
-          <div class="ind-val">4.62%</div>
-          <div class="ind-change green">▲ 0.04</div>
-          <div class="ind-bar"><div class="bar-fill" style="width:62%;background:var(--amber)"></div></div>
-          <div class="ind-tag">⚠ 偏高 (>4.5%)</div>
-          <p class="ind-desc">全球资产定价的"无风险锚"。上升压制股市估值，尤其是科技股。<b>>4.8% 关键 · >5% 警报</b>。</p>
-        </div>
-
-        <!-- DXY -->
-        <div class="ind-card status-ok">
-          <div class="ind-name">DXY <span>美元指数</span></div>
-          <div class="ind-val">104.32</div>
-          <div class="ind-change red">▼ 0.18</div>
-          <div class="ind-bar"><div class="bar-fill" style="width:45%;background:var(--green)"></div></div>
-          <div class="ind-tag">正常区间 (100-105)</div>
-          <p class="ind-desc">美元对一篮子主要货币的强弱。走强意味着全球流动性收紧、新兴市场承压。<b>>107 流动性紧张</b>。</p>
-        </div>
-
-        <!-- 10Y-2Y -->
-        <div class="ind-card status-ok">
-          <div class="ind-name">10Y-2Y <span>期限利差</span></div>
-          <div class="ind-val">+0.42</div>
-          <div class="ind-change green">▲ 0.03</div>
-          <div class="ind-bar"><div class="bar-fill" style="width:50%;background:var(--green)"></div></div>
-          <div class="ind-tag">正陡峭化</div>
-          <p class="ind-desc">长短期美债利差。<b>负值 = 倒挂</b>，是历史上几乎所有美国衰退的提前信号；由负转正后 6-18 月易触发衰退。</p>
-        </div>
-
-        <!-- S&P -->
-        <div class="ind-card status-ok">
-          <div class="ind-name">S&P 500 <span>美股大盘</span></div>
-          <div class="ind-val">5,832.40</div>
-          <div class="ind-change green">▲ 14.32 (+0.25%)</div>
-          <div class="ind-bar"><div class="bar-fill" style="width:75%;background:var(--green)"></div></div>
-          <div class="ind-tag">在 200 日均线上方</div>
-          <p class="ind-desc">美股最具代表性的指数，由 500 家大公司组成。<b>跌破 200 日均线</b>通常预示中期趋势转弱。</p>
+      <div class="ind-grid" data-tier="1">
+        <!-- JS 渲染 -->
+        <div class="ind-card" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-soft)">
+          数据加载中...
         </div>
       </div>
     </section>
@@ -117,37 +61,7 @@
         <h2>🏦 信用与银行</h2>
         <span class="block-sub">系统性风险预警</span>
       </div>
-
-      <div class="ind-grid">
-        <div class="ind-card status-ok">
-          <div class="ind-name">HY OAS <span>高收益债利差</span></div>
-          <div class="ind-val">328 bp</div>
-          <div class="ind-change red">▼ 4 bp</div>
-          <div class="ind-tag">正常 (300-400)</div>
-          <p class="ind-desc">"垃圾债"与国债的利差。<b>快速走阔</b>意味着市场担心企业违约，是信用危机的最敏感信号。<b>>500bp 警报</b>。</p>
-        </div>
-        <div class="ind-card status-ok">
-          <div class="ind-name">IG OAS <span>投资级利差</span></div>
-          <div class="ind-val">118 bp</div>
-          <div class="ind-change red">▼ 1 bp</div>
-          <div class="ind-tag">正常 (100-150)</div>
-          <p class="ind-desc">优质公司债与国债的利差。<b>同时走阔</b>意味着系统性而非局部风险。<b>>200bp 警报</b>。</p>
-        </div>
-        <div class="ind-card status-ok">
-          <div class="ind-name">KBW 银行指数 <span>大行</span></div>
-          <div class="ind-val">118.42</div>
-          <div class="ind-change green">▲ 0.65 (+0.6%)</div>
-          <div class="ind-tag">同步大盘</div>
-          <p class="ind-desc">美国 24 家大型银行股的加权指数。<b>大幅跑输标普</b>常预示银行业承压（如 2023 年硅谷银行事件）。</p>
-        </div>
-        <div class="ind-card status-warn">
-          <div class="ind-name">KRE 区域银行 <span>ETF</span></div>
-          <div class="ind-val">55.21</div>
-          <div class="ind-change red">▼ 0.42 (-0.8%)</div>
-          <div class="ind-tag">⚠ 跑输大盘</div>
-          <p class="ind-desc">中小银行 ETF。<b>对利率和商业地产暴露最大</b>，是地方性银行危机的先行指标。</p>
-        </div>
-      </div>
+      <div class="ind-grid" data-tier="2"></div>
     </section>
 
     <!-- 邮件订阅 CTA -->
@@ -184,39 +98,34 @@
       </div>
     </section>
 
-    <!-- 市场情绪（免费可见） -->
+    <!-- 第四档：危机模式触发器 -->
+    <section class="block">
+      <div class="block-title">
+        <h2>🚨 危机模式触发器</h2>
+        <span class="block-sub">平时不必看 · 异动时重点关注</span>
+      </div>
+      <div class="ind-grid" data-tier="4"></div>
+    </section>
+
+    <!-- 市场情绪 -->
     <section class="block">
       <div class="block-title">
         <h2>😱 市场情绪</h2>
         <span class="block-sub">CNN Fear & Greed 综合情绪指标 · 反向参考</span>
       </div>
       <p class="block-desc">综合 7 个子指标（动量、波动率、安全资产需求、垃圾债需求、Put/Call 比率、广度、看涨期权）。<b>极度恐慌时往往是底部</b>，<b>极度贪婪时往往临近顶部</b>。</p>
-
-      <div class="sentiment">
-        <div class="gauge">
-          <div class="gauge-val">62</div>
-          <div class="gauge-label">贪婪</div>
-        </div>
-        <div class="sentiment-info">
-          <div class="sent-row"><span>极度恐慌</span><span class="sent-bar"><i style="left:62%"></i></span><span>极度贪婪</span></div>
-          <p>当前市场处于<b class="amber">贪婪</b>区间。历史经验显示，连续 >75 后易出现回调。建议保持仓位但警惕情绪反转。</p>
-          <div class="sent-meta">
-            <div><span>一周前</span><b>54</b></div>
-            <div><span>一月前</span><b>43</b></div>
-            <div><span>一年前</span><b>38</b></div>
-          </div>
-        </div>
-      </div>
+      <div data-sentiment></div>
     </section>
 
     <!-- 数据来源 -->
     <footer class="dash-footer">
-      数据来源：Yahoo Finance · FRED · CBOE · CNN · 新浪财经 · 金十数据 · 36氪<br>
-      <small>数据每日更新 · 仅供参考，不构成投资建议</small>
+      数据来源：Yahoo Finance · FRED · CNN<br>
+      <small>数据每 15 分钟更新 · 仅供参考，不构成投资建议</small>
     </footer>
 
   </div>
 </main>
 
+<script src="dashboard.js"></script>
 </body>
 </html>
