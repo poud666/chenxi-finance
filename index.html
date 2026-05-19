@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>晨曦财经 · 每日 AI 财经播报</title>
+<meta name="description" content="每日 AI 深度分析 + 实时宏观仪表盘。早上 8 点准时送达，让你 5 分钟看完全市场。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="logo">
+      <span class="logo-mark">◉</span>
+      <span class="logo-text">晨曦财经</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">功能</a>
+      <a href="#pricing">定价</a>
+      <a href="dashboard.html">仪表盘演示</a>
+      <a href="#" class="btn-primary btn-sm">立即订阅</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      由 Claude AI 驱动 · 每日北京时间 08:00 准时送达
+    </div>
+
+    <h1 class="hero-title">
+      <span class="serif">5 分钟</span>看完<br>
+      全球宏观与 A 股<span class="accent">脉搏</span>
+    </h1>
+
+    <p class="hero-desc">
+      整合 A 股 / 美股 / 美债 / 信用利差 / 板块资金，<br>
+      经 Claude AI 深度分析，生成 9 维度专业晨报 + 语音播报。
+    </p>
+
+    <div class="hero-cta">
+      <a href="#pricing" class="btn-primary btn-lg">¥19.9/月 立即订阅</a>
+      <a href="dashboard.html" class="btn-ghost btn-lg">看看长什么样 →</a>
+    </div>
+
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-num">9</span><span class="meta-label">分析维度</span></div>
+      <div class="meta-item"><span class="meta-num">12+</span><span class="meta-label">实时指标</span></div>
+      <div class="meta-item"><span class="meta-num">08:00</span><span class="meta-label">每日推送</span></div>
+      <div class="meta-item"><span class="meta-num">~1200</span><span class="meta-label">字深度分析</span></div>
+    </div>
+  </div>
+
+  <!-- 装饰性背景 -->
+  <div class="hero-grid"></div>
+</section>
+
+<!-- FEATURES (Bento) -->
+<section id="features" class="features">
+  <div class="container">
+    <h2 class="section-title">为什么<span class="accent">不一样</span>?</h2>
+
+    <div class="bento">
+      <!-- 大格：AI 分析 -->
+      <div class="bento-card span-2">
+        <div class="card-tag">核心能力</div>
+        <h3>Claude AI · 9 维度深度分析</h3>
+        <p>不是简单的数据搬运。每天用最强 Claude 模型，从宏观要情、美股复盘、大盘结构、A 股主线、板块轮动、资金热点、后市预测、风险提示、操作策略 9 个维度给出有逻辑、有支撑的判断。</p>
+        <div class="card-demo">
+          <div class="demo-line"><span class="demo-tag">【宏观要情】</span> 美联储 11 月会议纪要释放鸽派信号...</div>
+          <div class="demo-line"><span class="demo-tag">【大盘结构】</span> 创业板相对科创 50 走强，反映...</div>
+          <div class="demo-line"><span class="demo-tag">【今日策略】</span> 建议 7 成仓，重点关注...</div>
+        </div>
+      </div>
+
+      <!-- 仪表盘 -->
+      <div class="bento-card">
+        <div class="card-tag">实时</div>
+        <h3>宏观仪表盘</h3>
+        <p>VIX · MOVE · 美债利差 · 信用利差 · 美元指数。一眼看到所有警戒线。</p>
+        <div class="indicator-mini">
+          <div class="ind"><span>VIX</span><b class="green">14.2</b></div>
+          <div class="ind"><span>MOVE</span><b class="green">98</b></div>
+          <div class="ind"><span>10Y</span><b class="amber">4.32%</b></div>
+        </div>
+      </div>
+
+      <!-- 语音播报 -->
+      <div class="bento-card">
+        <div class="card-tag">音频</div>
+        <h3>语音晨报</h3>
+        <p>通勤路上戴耳机就能听完。AI 合成自然女声。</p>
+        <div class="audio-mock">
+          <div class="audio-btn">▶</div>
+          <div class="audio-wave">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="audio-time">06:42</div>
+        </div>
+      </div>
+
+      <!-- 准时 -->
+      <div class="bento-card">
+        <div class="card-tag">守时</div>
+        <h3>北京时间 08:00</h3>
+        <p>开盘前送达，给你 90 分钟消化判断。从不延迟。</p>
+        <div class="time-mock">08:00<small>:00 AM</small></div>
+      </div>
+
+      <!-- 数据来源 -->
+      <div class="bento-card span-2">
+        <div class="card-tag">数据</div>
+        <h3>多源聚合 · 一手快讯</h3>
+        <p>新浪财经实时行情 · Yahoo Finance 美股 · 金十数据快讯 · 36 氪 · 英为财情 · FRED 信用数据 · CBOE 波动率。</p>
+        <div class="sources">
+          <span>新浪财经</span><span>Yahoo Finance</span><span>金十数据</span>
+          <span>36 氪</span><span>FRED</span><span>CBOE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="pricing">
+  <div class="container">
+    <h2 class="section-title">透明定价<span class="accent">. 随时取消</span></h2>
+    <p class="section-desc">早鸟价限时 ¥19.9/月，正式版本 ¥39/月</p>
+
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-name">免费体验</div>
+        <div class="plan-price">¥0</div>
+        <ul class="plan-feat">
+          <li>✓ 每日宏观仪表盘</li>
+          <li>✓ 当日摘要（前 200 字）</li>
+          <li>✗ 完整 AI 分析</li>
+          <li>✗ 语音播报</li>
+          <li>✗ 历史归档</li>
+        </ul>
+        <a href="#" class="btn-ghost btn-full">立即体验</a>
+      </div>
+
+      <div class="plan plan-pro">
+        <div class="plan-badge">早鸟限定</div>
+        <div class="plan-name">专业版</div>
+        <div class="plan-price">¥19.9<small>/月</small></div>
+        <div class="plan-old">原价 ¥39/月</div>
+        <ul class="plan-feat">
+          <li>✓ 完整 AI 9 维度分析</li>
+          <li>✓ MP3 语音播报</li>
+          <li>✓ 实时宏观仪表盘</li>
+          <li>✓ 历史归档检索</li>
+          <li>✓ 重大事件实时推送</li>
+        </ul>
+        <a href="#" class="btn-primary btn-full">立即订阅</a>
+      </div>
+
+      <div class="plan">
+        <div class="plan-name">年度版</div>
+        <div class="plan-price">¥199<small>/年</small></div>
+        <div class="plan-old">月省 ¥3.3 (相当于八折)</div>
+        <ul class="plan-feat">
+          <li>✓ 专业版全部功能</li>
+          <li>✓ 一次付费用一年</li>
+          <li>✓ 优先支持</li>
+          <li>✓ 重大策略复盘</li>
+          <li>✓ 早期新功能内测</li>
+        </ul>
+        <a href="#" class="btn-ghost btn-full">选择年度</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <h2 class="section-title">常见问题</h2>
+    <div class="faq-list">
+      <details>
+        <summary>这不是投资建议吧?</summary>
+        <p>对，本服务仅提供市场信息与 AI 分析参考，不构成任何投资建议。投资有风险，决策请自负。</p>
+      </details>
+      <details>
+        <summary>AI 分析靠谱吗?</summary>
+        <p>我们用的是 Anthropic Claude 旗舰模型，是目前公认推理能力最强的 AI 之一。它不预测涨跌，而是帮你结构化梳理当天的关键信息和影响逻辑。</p>
+      </details>
+      <details>
+        <summary>怎么收到播报?</summary>
+        <p>每天 08:00 你会在本网站看到当日完整播报。也可以扫码绑定微信，新内容实时通知。</p>
+      </details>
+      <details>
+        <summary>能退款吗?</summary>
+        <p>订阅后 7 天内全额退款，无需理由。</p>
+      </details>
+      <details>
+        <summary>周末发吗?</summary>
+        <p>工作日每天发。周末发周度复盘版。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <span class="logo-mark">◉</span>
+          <span class="logo-text">晨曦财经</span>
+        </div>
+        <p>每日 AI 财经播报 · 让 5 分钟看完市场成为可能</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h5>产品</h5>
+          <a href="#features">功能介绍</a>
+          <a href="#pricing">定价</a>
+          <a href="dashboard.html">仪表盘演示</a>
+        </div>
+        <div>
+          <h5>关于</h5>
+          <a href="#">联系我们</a>
+          <a href="#">用户协议</a>
+          <a href="#">隐私政策</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 晨曦财经 · 本服务仅供参考，不构成投资建议
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仪表盘 · 晨曦财经</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">◉</span>
+      <span class="logo-text">晨曦财经</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#features">功能</a>
+      <a href="index.html#pricing">定价</a>
+      <a href="dashboard.html" style="color:var(--text)">仪表盘</a>
+      <a href="index.html#pricing" class="btn-primary btn-sm">解锁完整版</a>
+    </div>
+  </div>
+</nav>
+
+<main class="dash">
+  <div class="container">
+
+    <!-- 标题区 -->
+    <header class="dash-header">
+      <div>
+        <div class="dash-eyebrow"><span class="dot"></span>实时数据 · 演示版</div>
+        <h1>今日市场速览</h1>
+        <p class="dash-date">2026 年 5 月 14 日 · 周四</p>
+      </div>
+      <div class="dash-actions">
+        <button class="btn-ghost btn-sm">⟳ 刷新</button>
+        <button class="btn-primary btn-sm">解锁完整 AI 分析</button>
+      </div>
+    </header>
+
+    <!-- 一级仪表盘：核心指标 -->
+    <section class="block">
+      <div class="block-title">
+        <h2>⚡ 核心指标</h2>
+        <span class="block-sub">每日必看 · 自动判断警戒线</span>
+      </div>
+
+      <div class="ind-grid">
+        <!-- VIX -->
+        <div class="ind-card status-ok">
+          <div class="ind-name">VIX <span>恐慌指数</span></div>
+          <div class="ind-val">14.20</div>
+          <div class="ind-change green">▲ 0.32 (+2.3%)</div>
+          <div class="ind-bar"><div class="bar-fill" style="width:30%;background:var(--green)"></div></div>
+          <div class="ind-tag">正常区间 (12-20)</div>
+        </div>
+
+        <!-- MOVE -->
+        <div class="ind-card status-ok">
+          <div class="ind-name">MOVE <span>债券波动率</span></div>
+          <div class="ind-val">98</div>
+          <div class="ind-change red">▼ 2 (-2.0%)</div>
+          <div class="ind-bar"><div class="bar-fill" style="width:35%;background:var(--green)"></div></div>
+          <div class="ind-tag">正常区间 (80-100)</div>
+        </div>
+
+        <!-- 10Y -->
+        <div class="ind-card status-warn">
+          <div class="ind-name">10Y 美债 <span>收益率</span></div>
+          <div class="ind-val">4.62%</div>
+          <div class="ind-change green">▲ 0.04</div>
+          <div class="ind-bar"><div class="bar-fill" style="width:62%;background:var(--amber)"></div></div>
+          <div class="ind-tag">⚠ 偏高 (>4.5%)</div>
+        </div>
+
+        <!-- DXY -->
+        <div class="ind-card status-ok">
+          <div class="ind-name">DXY <span>美元指数</span></div>
+          <div class="ind-val">104.32</div>
+          <div class="ind-change red">▼ 0.18</div>
+          <div class="ind-bar"><div class="bar-fill" style="width:45%;background:var(--green)"></div></div>
+          <div class="ind-tag">正常区间 (100-105)</div>
+        </div>
+
+        <!-- 10Y-2Y -->
+        <div class="ind-card status-ok">
+          <div class="ind-name">10Y-2Y <span>期限利差</span></div>
+          <div class="ind-val">+0.42</div>
+          <div class="ind-change green">▲ 0.03</div>
+          <div class="ind-bar"><div class="bar-fill" style="width:50%;background:var(--green)"></div></div>
+          <div class="ind-tag">正陡峭化</div>
+        </div>
+
+        <!-- S&P -->
+        <div class="ind-card status-ok">
+          <div class="ind-name">S&P 500</div>
+          <div class="ind-val">5,832.40</div>
+          <div class="ind-change green">▲ 14.32 (+0.25%)</div>
+          <div class="ind-bar"><div class="bar-fill" style="width:75%;background:var(--green)"></div></div>
+          <div class="ind-tag">在 200 日均线上方</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 二级：信用与银行 -->
+    <section class="block">
+      <div class="block-title">
+        <h2>🏦 信用与银行</h2>
+        <span class="block-sub">系统性风险预警</span>
+      </div>
+
+      <div class="ind-grid">
+        <div class="ind-card status-ok">
+          <div class="ind-name">HY OAS <span>高收益债利差</span></div>
+          <div class="ind-val">328 bp</div>
+          <div class="ind-change red">▼ 4 bp</div>
+          <div class="ind-tag">正常 (300-400)</div>
+        </div>
+        <div class="ind-card status-ok">
+          <div class="ind-name">IG OAS <span>投资级利差</span></div>
+          <div class="ind-val">118 bp</div>
+          <div class="ind-change red">▼ 1 bp</div>
+          <div class="ind-tag">正常 (100-150)</div>
+        </div>
+        <div class="ind-card status-ok">
+          <div class="ind-name">KBW 银行指数</div>
+          <div class="ind-val">118.42</div>
+          <div class="ind-change green">▲ 0.65 (+0.6%)</div>
+          <div class="ind-tag">同步大盘</div>
+        </div>
+        <div class="ind-card status-warn">
+          <div class="ind-name">KRE 区域银行</div>
+          <div class="ind-val">55.21</div>
+          <div class="ind-change red">▼ 0.42 (-0.8%)</div>
+          <div class="ind-tag">⚠ 跑输大盘</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 付费墙提示 -->
+    <section class="paywall">
+      <div class="paywall-inner">
+        <div class="paywall-tag">🔒 专业版功能</div>
+        <h3>解锁完整 AI 9 维度深度分析 + 语音播报</h3>
+        <p>包括：宏观要情解读 · 美股复盘 · 大盘结构分析 · A 股主线判断 · 板块轮动 · 资金热点 · 后市预测 · 风险提示 · 操作策略</p>
+        <a href="index.html#pricing" class="btn-primary btn-lg">¥19.9/月 立即订阅 →</a>
+      </div>
+      <!-- 模糊预览 -->
+      <div class="preview-blur">
+        <div class="preview-line"></div>
+        <div class="preview-line" style="width:90%"></div>
+        <div class="preview-line" style="width:85%"></div>
+        <div class="preview-line" style="width:70%"></div>
+        <div class="preview-line" style="width:80%"></div>
+        <div class="preview-line" style="width:60%"></div>
+      </div>
+    </section>
+
+    <!-- 市场情绪（免费可见） -->
+    <section class="block">
+      <div class="block-title">
+        <h2>😱 市场情绪</h2>
+        <span class="block-sub">CNN Fear & Greed 综合情绪指标</span>
+      </div>
+
+      <div class="sentiment">
+        <div class="gauge">
+          <div class="gauge-val">62</div>
+          <div class="gauge-label">贪婪</div>
+        </div>
+        <div class="sentiment-info">
+          <div class="sent-row"><span>极度恐慌</span><span class="sent-bar"><i style="left:62%"></i></span><span>极度贪婪</span></div>
+          <p>当前市场处于<b class="amber">贪婪</b>区间。历史经验显示，连续 >75 后易出现回调。建议保持仓位但警惕情绪反转。</p>
+          <div class="sent-meta">
+            <div><span>一周前</span><b>54</b></div>
+            <div><span>一月前</span><b>43</b></div>
+            <div><span>一年前</span><b>38</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 数据来源 -->
+    <footer class="dash-footer">
+      数据来源：Yahoo Finance · FRED · CBOE · CNN · 新浪财经 · 金十数据 · 36氪<br>
+      <small>数据每日更新 · 仅供参考，不构成投资建议</small>
+    </footer>
+
+  </div>
+</main>
+
+</body>
+</html>
