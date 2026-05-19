@@ -125,11 +125,23 @@ def fetch_yahoo(symbol: str, with_history: bool = True) -> dict | None:
 # FRED（CSV 下载，无需 API Key）
 # ──────────────────────────────────────────────────────
 
-def fetch_fred(series_id: str, with_history: bool = True) -> dict | None:
-    """从 FRED CSV 下载最新值 + 30 天历史"""
+def fetch_fred(series_id: str, with_history: bool = True, retries: int = 3) -> dict | None:
+    """从 FRED CSV 下载最新值 + 30 天历史（带重试）"""
+    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
+    r = None
+    for attempt in range(retries):
+        try:
+            r = requests.get(url, timeout=30, headers=UA)
+            if r.status_code == 200:
+                break
+        except Exception as e:
+            if attempt == retries - 1:
+                print(f"  [fred] {series_id} 重试 {retries} 次全部失败: {e}")
+                return None
+            print(f"  [fred] {series_id} 第 {attempt+1} 次失败，重试...")
+    if not r or r.status_code != 200:
+        return None
     try:
-        url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
-        r = requests.get(url, timeout=TIMEOUT, headers=UA)
         reader = csv.reader(io.StringIO(r.text))
         rows = [row for row in reader if len(row) == 2]
         # 跳过标题
@@ -233,13 +245,13 @@ def main():
         category="tier1"))
     print("  ✓ MOVE")
 
-    # ^TNX 在 Yahoo 是 10Y 收益率 *10，比如 4.32% 显示为 43.20
+    # ^TNX 在 Yahoo 现在直接返回百分比（如 4.62），不需要再除以 10
     tnx = fetch_yahoo("^TNX")
-    if tnx:
+    # 自动检测：如果值 > 20，说明是旧版 *10 格式
+    if tnx and tnx.get("value", 0) > 20:
         tnx["value"] = round(tnx["value"] / 10, 3)
         if tnx.get("change") is not None:
             tnx["change"] = round(tnx["change"] / 10, 3)
-            tnx["change_pct"] = round(tnx["change_pct"], 2)
         if tnx.get("history"):
             tnx["history"] = [round(v / 10, 3) for v in tnx["history"]]
     indicators.append(make_indicator(
@@ -256,10 +268,24 @@ def main():
         category="tier1"))
     print("  ✓ DXY")
 
-    # 10Y-2Y 期限利差（直接用 FRED）
+    # 10Y-2Y 期限利差：优先用 FRED，失败时用 Yahoo 算
+    t10y2y = fetch_fred("T10Y2Y")
+    if not t10y2y:
+        print("  [备用] FRED T10Y2Y 失败，用 Yahoo ^TNX - ^TYX 估算")
+        ten = tnx  # 已经获取过
+        two = fetch_yahoo("^IRX")  # 13周国债 ~= 短端，作为 2Y 近似
+        if ten and two:
+            ten_v = ten["value"]
+            two_v = two["value"] / 10 if two["value"] > 20 else two["value"]
+            t10y2y = {
+                "value": round(ten_v - two_v, 3),
+                "change": None,
+                "change_pct": None,
+                "history": None,
+            }
     indicators.append(make_indicator(
         "10Y-2Y", "期限利差", "10年-2年美债",
-        fetch_fred("T10Y2Y"), "T10Y2Y", unit="%",
+        t10y2y, "T10Y2Y", unit="%",
         desc="长短期美债利差。<b>负值 = 倒挂</b>，是历史上几乎所有美国衰退的提前信号；由负转正后 6-18 月易触发衰退。",
         category="tier1"))
     print("  ✓ T10Y2Y")
