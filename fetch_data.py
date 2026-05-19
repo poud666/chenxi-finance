@@ -39,6 +39,11 @@ THRESHOLDS = {
     # 第二档 - 信用
     "HY_OAS":  {"normal": (300, 400), "warn": 500,   "alert": 700},
     "IG_OAS":  {"normal": (100, 150), "warn": 200,   "alert": 300},
+    # 第三档 - 情绪与广度
+    "SKEW":    {"normal": (120, 145), "warn": 150,   "alert": 160},
+    "VVIX":    {"normal": (80, 110),  "warn": 130,   "alert": 150},
+    "VXN":     {"normal": (15, 25),   "warn": 30,    "alert": 40},
+    "BREADTH": {"normal": (4, 8),     "warn_low": 3, "alert_low": 2},
     # 情绪
     "FG":      {"normal": (25, 75),   "warn_high": 75, "warn_low": 25,
                 "alert_high": 90, "alert_low": 10},
@@ -296,6 +301,118 @@ def main():
         desc="标普金融板块 ETF，覆盖大行、保险、券商。<b>持续跑输大盘</b>反映金融压力。",
         category="tier2"))
     print("  ✓ XLF")
+
+    # ─── 第三档：市场广度与情绪 ───
+    print("\n[第三档] 市场广度与情绪")
+
+    indicators.append(make_indicator(
+        "SKEW", "尾部风险", "CBOE SKEW 指数",
+        fetch_yahoo("^SKEW"), "SKEW",
+        desc="衡量标普 500 极端下跌的风险溢价。<b>>145 警惕</b>：期权市场为黑天鹅事件支付高溢价。100 = 正态分布。",
+        category="tier3"))
+    print("  ✓ SKEW")
+
+    indicators.append(make_indicator(
+        "VVIX", "VIX 的 VIX", "波动率的波动率",
+        fetch_yahoo("^VVIX"), "VVIX",
+        desc="VIX 本身的隐含波动率。<b>>130</b> 表示市场对 VIX 暴涨有预期，常先于 VIX 真正飙升。",
+        category="tier3"))
+    print("  ✓ VVIX")
+
+    indicators.append(make_indicator(
+        "VXN", "纳指 VIX", "纳斯达克100波动率",
+        fetch_yahoo("^VXN"), "VXN",
+        desc="纳斯达克 100 的隐含波动率。<b>常高于 VIX</b>，反映科技股波动更大。两者差距扩大时科技股承压。",
+        category="tier3"))
+    print("  ✓ VXN")
+
+    # 市场广度：RSP（等权）/ SPY（市值加权）相对走势
+    rsp = fetch_yahoo("RSP")
+    spy = fetch_yahoo("SPY")
+    if rsp and spy:
+        rsp_chg = rsp.get("change_pct", 0)
+        spy_chg = spy.get("change_pct", 0)
+        diff = rsp_chg - spy_chg
+        breadth_status = "ok"
+        if diff < -0.5: breadth_status = "warn"
+        if diff < -1.0: breadth_status = "alert"
+        indicators.append({
+            "name": "RSP/SPY",
+            "name_cn": "市场广度",
+            "sub": "等权 vs 市值加权",
+            "value": round(diff, 2),
+            "change": round(diff, 2),
+            "change_pct": None,
+            "unit": "%",
+            "status": breadth_status,
+            "desc": "S&P 500 等权 ETF 相对市值加权 ETF 的日表现差。<b>负值</b> = 大盘股带动指数，中小盘弱（广度差）；<b>正值</b> = 普涨格局。",
+            "category": "tier3",
+            "threshold": {},
+        })
+    print("  ✓ RSP/SPY 广度")
+
+    # 风险偏好：SPHB（高Beta）/ SPLV（低波动）相对走势
+    sphb = fetch_yahoo("SPHB")
+    splv = fetch_yahoo("SPLV")
+    if sphb and splv:
+        sphb_chg = sphb.get("change_pct", 0)
+        splv_chg = splv.get("change_pct", 0)
+        diff = sphb_chg - splv_chg
+        appetite_status = "ok"
+        if diff < -1.5: appetite_status = "warn"
+        if diff < -3.0: appetite_status = "alert"
+        indicators.append({
+            "name": "SPHB/SPLV",
+            "name_cn": "风险偏好",
+            "sub": "高Beta vs 低波动",
+            "value": round(diff, 2),
+            "change": round(diff, 2),
+            "change_pct": None,
+            "unit": "%",
+            "status": appetite_status,
+            "desc": "高 Beta ETF 相对低波动 ETF 的日表现。<b>正值</b> = 资金愿意冒险；<b>大幅负值</b> = 避险情绪浓，向防御股切换。",
+            "category": "tier3",
+            "threshold": {},
+        })
+    print("  ✓ SPHB/SPLV 风险偏好")
+
+    # 板块广度：11 个 SPDR Select Sector 中今日上涨数
+    sectors = {
+        "XLK": "科技", "XLF": "金融", "XLE": "能源", "XLV": "医疗",
+        "XLI": "工业", "XLY": "可选消费", "XLP": "必需消费", "XLU": "公用事业",
+        "XLB": "原材料", "XLRE": "房地产", "XLC": "通信",
+    }
+    up_count = 0
+    total = 0
+    detail = []
+    for sym, name in sectors.items():
+        d = fetch_yahoo(sym)
+        if d and d.get("change_pct") is not None:
+            total += 1
+            if d["change_pct"] > 0:
+                up_count += 1
+            detail.append({"name": name, "sym": sym, "change_pct": d["change_pct"]})
+
+    if total > 0:
+        breadth_pct = round(up_count / total * 100, 1)
+        breadth_status = "ok"
+        if up_count <= 3: breadth_status = "warn"
+        if up_count <= 2: breadth_status = "alert"
+        indicators.append({
+            "name": "板块广度",
+            "name_cn": "Sector Breadth",
+            "sub": f"{up_count}/{total} 板块上涨",
+            "value": up_count,
+            "change": None,
+            "change_pct": breadth_pct,
+            "unit": f"/{total}",
+            "status": breadth_status,
+            "desc": "S&P 11 大板块中今日上涨的数量。<b>普涨（≥8）</b>= 健康上行；<b>分化（4-7）</b>= 轮动；<b>集体下跌（≤3）</b>= 系统性风险。",
+            "category": "tier3",
+            "threshold": {"normal": [4, 8]},
+            "detail": sorted(detail, key=lambda x: -x["change_pct"]),
+        })
+    print(f"  ✓ 板块广度 = {up_count}/{total}")
 
     # ─── 第四档：危机模式触发器（ETF） ───
     print("\n[第四档] 危机模式触发器（监控用）")

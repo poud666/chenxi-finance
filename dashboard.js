@@ -111,6 +111,7 @@ function renderSentiment(s) {
 async function load() {
   const tier1Container = document.querySelector('[data-tier="1"]');
   const tier2Container = document.querySelector('[data-tier="2"]');
+  const tier3Container = document.querySelector('[data-tier="3"]');
   const tier4Container = document.querySelector('[data-tier="4"]');
   const sentimentContainer = document.querySelector('[data-sentiment]');
   const updatedEl = document.querySelector('[data-updated]');
@@ -121,13 +122,14 @@ async function load() {
     const data = await r.json();
 
     // 按分类分组
-    const groups = { tier1: [], tier2: [], tier4: [] };
+    const groups = { tier1: [], tier2: [], tier3: [], tier4: [] };
     data.indicators.forEach(ind => {
       if (groups[ind.category]) groups[ind.category].push(ind);
     });
 
     if (tier1Container) tier1Container.innerHTML = groups.tier1.map(renderIndicator).join('');
     if (tier2Container) tier2Container.innerHTML = groups.tier2.map(renderIndicator).join('');
+    if (tier3Container) tier3Container.innerHTML = groups.tier3.map(renderIndicator).join('');
     if (tier4Container) tier4Container.innerHTML = groups.tier4.map(renderIndicator).join('');
     if (sentimentContainer) sentimentContainer.innerHTML = renderSentiment(data.sentiment);
 
