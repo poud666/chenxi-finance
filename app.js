@@ -5,7 +5,7 @@
 
 // 部署 Cloudflare Worker 后改这里：
 // 示例: 'https://chenxi-api.your-account.workers.dev'
-const API_URL = window.API_URL || 'https://chenxi-api.lbs20060607.workers.dev';
+const API_URL = window.API_URL || '';  // 同源（Pages Functions）
 
 // ──────────────────────────────────────────────────────
 // API 调用封装
