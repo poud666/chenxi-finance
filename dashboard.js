@@ -40,6 +40,41 @@ function renderRangeBar(ind) {
   return `<div class="ind-bar"><div class="bar-fill" style="width:${pct}%;background:var(--${color})"></div></div>`;
 }
 
+function renderSparkline(history) {
+  if (!history || history.length < 2) return '';
+
+  const w = 220, h = 44, pad = 2;
+  const min = Math.min(...history);
+  const max = Math.max(...history);
+  const range = (max - min) || 1;
+
+  // 计算每个点的 (x, y)
+  const points = history.map((v, i) => {
+    const x = pad + (i / (history.length - 1)) * (w - pad * 2);
+    const y = pad + (1 - (v - min) / range) * (h - pad * 2);
+    return [x, y];
+  });
+
+  // 趋势着色：当前值 vs 起始值
+  const trendUp = history[history.length - 1] >= history[0];
+  const color = trendUp ? 'var(--green)' : 'var(--red)';
+  const fillColor = trendUp ? 'rgba(74,222,128,0.08)' : 'rgba(239,68,68,0.08)';
+
+  const linePath = points.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+  const areaPath = linePath + ` L${points[points.length-1][0].toFixed(1)},${h-pad} L${points[0][0].toFixed(1)},${h-pad} Z`;
+
+  // 最后一个点
+  const last = points[points.length - 1];
+
+  return `
+    <svg class="sparkline" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+      <path d="${areaPath}" fill="${fillColor}" />
+      <path d="${linePath}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+      <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="2.5" fill="${color}" />
+    </svg>
+  `;
+}
+
 function renderTag(ind) {
   const t = ind.threshold || {};
   if (ind.status === 'alert') return `<div class="ind-tag">🚨 危险</div>`;
@@ -57,6 +92,7 @@ function renderIndicator(ind) {
       <div class="ind-name">${ind.name} <span>${ind.sub || ''}</span></div>
       <div class="ind-val">${valueDisplay}</div>
       ${formatChange(ind.change, ind.change_pct, ind.unit || '')}
+      ${renderSparkline(ind.history)}
       ${renderRangeBar(ind)}
       ${renderTag(ind)}
       <p class="ind-desc">${ind.desc || ''}</p>

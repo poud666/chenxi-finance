@@ -77,26 +77,45 @@ def classify(symbol: str, value: float) -> str:
 # Yahoo Finance（无需 API Key）
 # ──────────────────────────────────────────────────────
 
-def fetch_yahoo(symbol: str) -> dict | None:
-    """获取单个 Yahoo Finance 标的的最新价 + 变化"""
+def fetch_yahoo(symbol: str, with_history: bool = True) -> dict | None:
+    """获取单个 Yahoo Finance 标的的最新价 + 变化 + 30 天历史"""
     try:
         url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
-               "?interval=1d&range=5d")
+               "?interval=1d&range=1mo")
         r = requests.get(url, timeout=TIMEOUT, headers=UA)
         d = r.json()
-        meta = d["chart"]["result"][0]["meta"]
+        result = d["chart"]["result"][0]
+        meta = result["meta"]
         price = meta.get("regularMarketPrice")
         prev  = meta.get("chartPreviousClose") or price
         if price is None:
             return None
         change = price - prev
         change_pct = (change / prev * 100) if prev else 0
-        return {
+        out = {
             "value": round(price, 4),
             "change": round(change, 4),
             "change_pct": round(change_pct, 2),
             "prev_close": round(prev, 4),
         }
+
+        # 历史收盘（用于 mini chart）
+        if with_history:
+            try:
+                ts = result.get("timestamp", []) or []
+                closes = (result.get("indicators", {}).get("quote", [{}])[0]
+                          .get("close", []) or [])
+                # 过滤掉空值并取整
+                history = []
+                for t, c in zip(ts, closes):
+                    if c is not None:
+                        history.append(round(float(c), 4))
+                # 最多 30 个点
+                out["history"] = history[-30:]
+            except Exception:
+                pass
+
+        return out
     except Exception as e:
         print(f"  [yahoo] {symbol} 获取失败: {e}")
         return None
@@ -106,8 +125,8 @@ def fetch_yahoo(symbol: str) -> dict | None:
 # FRED（CSV 下载，无需 API Key）
 # ──────────────────────────────────────────────────────
 
-def fetch_fred(series_id: str) -> dict | None:
-    """从 FRED CSV 下载最新值"""
+def fetch_fred(series_id: str, with_history: bool = True) -> dict | None:
+    """从 FRED CSV 下载最新值 + 30 天历史"""
     try:
         url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
         r = requests.get(url, timeout=TIMEOUT, headers=UA)
@@ -123,12 +142,16 @@ def fetch_fred(series_id: str) -> dict | None:
         date_prev, val_prev = valid[-2]
         change = val_now - val_prev
         change_pct = (change / val_prev * 100) if val_prev else 0
-        return {
+        out = {
             "value": round(val_now, 4),
             "change": round(change, 4),
             "change_pct": round(change_pct, 2),
             "date": date_now,
         }
+        if with_history:
+            # 最近 30 天的值
+            out["history"] = [round(v, 4) for _, v in valid[-30:]]
+        return out
     except Exception as e:
         print(f"  [fred] {series_id} 获取失败: {e}")
         return None
@@ -185,6 +208,7 @@ def make_indicator(name, name_cn, sub, value_data, threshold_key,
         "desc": desc,
         "category": category,
         "threshold": THRESHOLDS.get(threshold_key, {}),
+        "history": value_data.get("history"),
     }
 
 
@@ -216,6 +240,8 @@ def main():
         if tnx.get("change") is not None:
             tnx["change"] = round(tnx["change"] / 10, 3)
             tnx["change_pct"] = round(tnx["change_pct"], 2)
+        if tnx.get("history"):
+            tnx["history"] = [round(v / 10, 3) for v in tnx["history"]]
     indicators.append(make_indicator(
         "10Y", "美债收益率", "10年期",
         tnx, "TNX", unit="%",
@@ -262,6 +288,8 @@ def main():
         hy["value"] = round(hy["value"] * 100, 0)
         if hy.get("change") is not None:
             hy["change"] = round(hy["change"] * 100, 0)
+        if hy.get("history"):
+            hy["history"] = [round(v * 100, 0) for v in hy["history"]]
     indicators.append(make_indicator(
         "HY OAS", "高收益债利差", "ICE BofA",
         hy, "HY_OAS", unit="bp",
@@ -274,6 +302,8 @@ def main():
         ig["value"] = round(ig["value"] * 100, 0)
         if ig.get("change") is not None:
             ig["change"] = round(ig["change"] * 100, 0)
+        if ig.get("history"):
+            ig["history"] = [round(v * 100, 0) for v in ig["history"]]
     indicators.append(make_indicator(
         "IG OAS", "投资级利差", "ICE BofA",
         ig, "IG_OAS", unit="bp",
