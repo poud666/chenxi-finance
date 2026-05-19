@@ -1,0 +1,21 @@
+# Cloudflare Pages 配置（前端 + Pages Functions API）
+name = "chenxi-finance"
+compatibility_date = "2024-09-01"
+pages_build_output_dir = "."
+
+# D1 数据库（与 Worker 共享同一个数据库）
+[[d1_databases]]
+binding = "DB"
+database_name = "chenxi-db"
+database_id = "59881fe5-302f-4aba-9f16-557bf5c18a23"
+
+# KV 存验证码
+[[kv_namespaces]]
+binding = "CODES"
+id = "fe888f22bfad4874a9f4a0b1a8c0ee1b"
+
+# 公开环境变量
+[vars]
+FROM_EMAIL = "onboarding@resend.dev"
+SITE_URL   = "https://chenxi-finance.pages.dev"
+PRICE_CNY  = "10"
