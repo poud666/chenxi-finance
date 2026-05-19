@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>订阅 · 股市预警</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">◉</span>
+      <span class="logo-text">股市预警</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#features">功能</a>
+      <a href="dashboard.html">仪表盘</a>
+      <a href="subscribe.html" style="color:var(--text)">订阅</a>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+  <div class="container" style="max-width:760px">
+
+    <div class="page-head">
+      <h1>订阅每日 AI 邮件播报</h1>
+      <p>¥10/月 · 7 天无理由退款 · 随时可取消</p>
+    </div>
+
+    <!-- 步骤 1: 登录 -->
+    <div class="panel" id="step-login">
+      <h3>1. 登录账户</h3>
+      <p style="color:var(--text-soft);margin-bottom:16px">请先登录或注册一个账户，方便管理订阅</p>
+      <button class="btn-primary" onclick="openLoginModal(onLogged)">使用邮箱登录</button>
+    </div>
+
+    <!-- 步骤 2: 选支付方式 -->
+    <div class="panel" id="step-pay" style="display:none">
+      <h3>2. 选择支付方式</h3>
+      <p style="color:var(--text-soft);margin-bottom:20px">扫码付款后，<b style="color:var(--accent)">务必在备注中填写你的邮箱</b>，便于核对</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+        <button class="pay-method-btn" data-method="alipay" onclick="selectMethod('alipay')">
+          <div class="pay-icon">💙</div>
+          <div class="pay-name">支付宝</div>
+          <div class="pay-amount">¥10/月</div>
+        </button>
+        <button class="pay-method-btn" data-method="wechat" onclick="selectMethod('wechat')">
+          <div class="pay-icon">💚</div>
+          <div class="pay-name">微信</div>
+          <div class="pay-amount">¥10/月</div>
+        </button>
+      </div>
+
+      <div id="qr-display" style="display:none">
+        <div style="text-align:center;margin:20px 0">
+          <div class="qr-box">
+            <img id="qr-image" src="" alt="收款码">
+          </div>
+          <div class="qr-label">
+            金额：<b style="color:var(--accent);font-size:1.2rem">¥10.00</b><br>
+            <span style="font-size:0.85rem">支付时请备注：<b id="user-email-display"></b></span>
+          </div>
+        </div>
+
+        <div style="border-top:1px dashed var(--border);padding-top:20px;margin-top:20px">
+          <h4 style="margin-bottom:12px">支付完成后...</h4>
+          <label style="display:block;margin-bottom:8px;color:var(--text-soft);font-size:.9rem">
+            支付订单号或备注（选填）
+          </label>
+          <input type="text" id="user-note" placeholder="例：支付宝订单号、对方账户名等"
+                 style="width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border-strong);border-radius:var(--r-md);color:var(--text);font-family:inherit;margin-bottom:14px">
+
+          <button class="btn-primary btn-full btn-lg" onclick="submitOrder()">我已完成支付，提交审核</button>
+          <p style="color:var(--text-mute);font-size:.8rem;text-align:center;margin-top:10px">提交后管理员将在 24 小时内核对并开通</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 提交成功 -->
+    <div class="panel" id="step-done" style="display:none">
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:3rem;margin-bottom:16px">✅</div>
+        <h3 style="color:var(--green)">订单已提交</h3>
+        <p style="color:var(--text-soft);margin:14px 0">
+          我们将在 24 小时内核对你的支付并开通订阅。<br>
+          开通后会发邮件通知你。
+        </p>
+        <a href="account.html" class="btn-primary" style="margin-top:14px;display:inline-block">查看我的订单</a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="app.js"></script>
+<script>
+let selectedMethod = null;
+
+// 收款码图片路径（用户需自己上传到仓库的 assets/ 目录）
+const QR_IMAGES = {
+  alipay: 'assets/alipay-qr.png',
+  wechat: 'assets/wechat-qr.png',
+};
+
+function onLogged(user) {
+  document.getElementById('step-login').style.display = 'none';
+  document.getElementById('step-pay').style.display = '';
+  if (user) {
+    document.getElementById('user-email-display').textContent = user.email;
+  }
+}
+
+function selectMethod(method) {
+  selectedMethod = method;
+  document.querySelectorAll('.pay-method-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.method === method);
+  });
+  document.getElementById('qr-display').style.display = '';
+  document.getElementById('qr-image').src = QR_IMAGES[method];
+  document.getElementById('qr-image').alt = method === 'alipay' ? '支付宝收款码' : '微信收款码';
+}
+
+async function submitOrder() {
+  if (!selectedMethod) return alert('请先选择支付方式');
+  const note = document.getElementById('user-note').value;
+  try {
+    await Orders.create({
+      payment_method: selectedMethod,
+      user_note: note,
+      amount: 10,
+      duration_days: 30,
+    });
+    document.getElementById('step-pay').style.display = 'none';
+    document.getElementById('step-done').style.display = '';
+  } catch (e) {
+    alert('提交失败：' + e.message);
+  }
+}
+
+// 已登录则直接进入支付页
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = await loadUser();
+  if (user) onLogged(user);
+});
+</script>
+
+<style>
+.pay-method-btn {
+  background: var(--bg);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-md);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  color: var(--text);
+}
+.pay-method-btn:hover {
+  border-color: var(--accent-soft);
+  transform: translateY(-2px);
+}
+.pay-method-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+.pay-icon { font-size: 2.5rem; margin-bottom: 8px; }
+.pay-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+.pay-amount { font-size: 0.9rem; color: var(--text-soft); }
+</style>
+
+</body>
+</html>

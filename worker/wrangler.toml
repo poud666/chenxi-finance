@@ -1,0 +1,26 @@
+name = "chenxi-api"
+main = "index.js"
+compatibility_date = "2024-09-01"
+
+# D1 数据库（部署前需创建）：
+# wrangler d1 create chenxi-db
+# 然后把下面的 database_id 替换为你的实际 ID
+[[d1_databases]]
+binding = "DB"
+database_name = "chenxi-db"
+database_id = "REPLACE_WITH_YOUR_D1_ID"
+
+# KV 存验证码、限流
+# wrangler kv:namespace create CODES
+[[kv_namespaces]]
+binding = "CODES"
+id = "REPLACE_WITH_YOUR_KV_ID"
+
+# 环境变量（敏感的用 wrangler secret put）：
+# wrangler secret put RESEND_API_KEY
+# wrangler secret put ADMIN_EMAIL
+# wrangler secret put SESSION_SECRET
+[vars]
+FROM_EMAIL = "noreply@chenxi.example.com"   # Resend 验证后的发件邮箱
+SITE_URL   = "https://poud666.github.io/chenxi-finance"
+PRICE_CNY  = "10"

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的账户 · 股市预警</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">◉</span>
+      <span class="logo-text">股市预警</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#features">功能</a>
+      <a href="dashboard.html">仪表盘</a>
+      <a href="subscribe.html">订阅</a>
+    </div>
+  </div>
+</nav>
+
+<main class="page">
+  <div class="container" style="max-width:820px">
+
+    <div class="page-head">
+      <h1>我的账户</h1>
+      <p>管理订阅状态和查看订单</p>
+    </div>
+
+    <div id="not-logged-in" class="panel" style="display:none;text-align:center;padding:60px 20px">
+      <h3>请先登录</h3>
+      <p style="color:var(--text-soft);margin:14px 0">登录后可查看账户和订单详情</p>
+      <button class="btn-primary" onclick="openLoginModal()">立即登录</button>
+    </div>
+
+    <div id="logged-in" style="display:none">
+
+      <!-- 账户信息 -->
+      <div class="panel">
+        <h3>账户信息</h3>
+        <table class="tbl">
+          <tr><td style="width:120px">邮箱</td><td><b id="acc-email"></b></td></tr>
+          <tr><td>订阅状态</td><td id="acc-status"></td></tr>
+          <tr><td>到期时间</td><td id="acc-until"></td></tr>
+        </table>
+
+        <div style="margin-top:20px">
+          <a href="subscribe.html" id="acc-cta" class="btn-primary" style="display:none">立即订阅 ¥10/月</a>
+          <a href="subscribe.html" id="acc-renew" class="btn-ghost" style="display:none">续费</a>
+        </div>
+      </div>
+
+      <!-- 订单历史 -->
+      <div class="panel">
+        <h3>订单历史</h3>
+        <table class="tbl" id="orders-table">
+          <thead>
+            <tr><th>日期</th><th>方式</th><th>金额</th><th>状态</th><th>备注</th></tr>
+          </thead>
+          <tbody id="orders-tbody"><tr><td colspan="5" style="color:var(--text-mute);text-align:center;padding:30px">加载中...</td></tr></tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script src="app.js"></script>
+<script>
+async function init() {
+  const user = await loadUser();
+  if (!user) {
+    document.getElementById('not-logged-in').style.display = '';
+    return;
+  }
+  document.getElementById('logged-in').style.display = '';
+  document.getElementById('acc-email').textContent = user.email;
+
+  const isPaid = user.is_paid;
+  const until = user.paid_until ? new Date(user.paid_until).toLocaleDateString('zh-CN') : null;
+
+  document.getElementById('acc-status').innerHTML = isPaid
+    ? '<span class="badge badge-approved">✓ 已订阅</span>'
+    : '<span class="badge badge-pending">未订阅</span>';
+  document.getElementById('acc-until').textContent = until || '—';
+
+  if (!isPaid) document.getElementById('acc-cta').style.display = 'inline-block';
+  else document.getElementById('acc-renew').style.display = 'inline-block';
+
+  // 订单历史
+  try {
+    const { orders } = await Orders.my();
+    const tbody = document.getElementById('orders-tbody');
+    if (!orders.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text-mute);text-align:center;padding:30px">暂无订单</td></tr>';
+      return;
+    }
+    tbody.innerHTML = orders.map(o => `
+      <tr>
+        <td>${new Date(o.created_at).toLocaleString('zh-CN')}</td>
+        <td>${o.payment_method === 'alipay' ? '支付宝' : '微信'}</td>
+        <td>¥${o.amount}</td>
+        <td><span class="badge badge-${o.status}">${{pending:'待审核',approved:'已通过',rejected:'已拒绝'}[o.status]}</span></td>
+        <td style="color:var(--text-mute);font-size:.85rem">${o.admin_note || o.user_note || '—'}</td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    document.getElementById('orders-tbody').innerHTML = `<tr><td colspan="5" style="color:var(--red)">${e.message}</td></tr>`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
