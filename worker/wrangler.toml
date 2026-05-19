@@ -8,19 +8,19 @@ compatibility_date = "2024-09-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "chenxi-db"
-database_id = "REPLACE_WITH_YOUR_D1_ID"
+database_id = "59881fe5-302f-4aba-9f16-557bf5c18a23"
 
 # KV 存验证码、限流
 # wrangler kv:namespace create CODES
 [[kv_namespaces]]
 binding = "CODES"
-id = "REPLACE_WITH_YOUR_KV_ID"
+id = "fe888f22bfad4874a9f4a0b1a8c0ee1b"
 
 # 环境变量（敏感的用 wrangler secret put）：
 # wrangler secret put RESEND_API_KEY
 # wrangler secret put ADMIN_EMAIL
 # wrangler secret put SESSION_SECRET
 [vars]
-FROM_EMAIL = "noreply@chenxi.example.com"   # Resend 验证后的发件邮箱
+FROM_EMAIL = "onboarding@resend.dev"   # Resend 免费默认发件邮箱（之后绑域名可改）
 SITE_URL   = "https://poud666.github.io/chenxi-finance"
 PRICE_CNY  = "10"
