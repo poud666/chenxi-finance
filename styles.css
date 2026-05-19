@@ -425,6 +425,21 @@ section { padding: 100px 0; }
   gap: 20px;
   margin-top: 60px;
 }
+.plans-two {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.pricing-note {
+  text-align: center;
+  color: var(--text-mute);
+  font-size: var(--tx-small);
+  margin-top: 40px;
+}
+.plan-feat b.green  { color: var(--green); font-weight: 600; }
+.plan-feat b.amber  { color: var(--amber); font-weight: 600; }
+.plan-feat b.red    { color: var(--red);   font-weight: 600; }
 .plan {
   background: var(--bg-elev);
   border: 1px solid var(--border);
@@ -585,7 +600,7 @@ section { padding: 100px 0; }
   .hero-meta { grid-template-columns: repeat(2, 1fr); gap: 20px; }
   .bento { grid-template-columns: 1fr; }
   .bento-card.span-2 { grid-column: span 1; }
-  .plans { grid-template-columns: 1fr; }
+  .plans, .plans-two { grid-template-columns: 1fr; }
   .plan-pro { transform: none; }
   .footer-top { grid-template-columns: 1fr; gap: 40px; }
 }

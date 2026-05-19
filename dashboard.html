@@ -20,7 +20,7 @@
       <a href="index.html#features">功能</a>
       <a href="index.html#pricing">定价</a>
       <a href="dashboard.html" style="color:var(--text)">仪表盘</a>
-      <a href="index.html#pricing" class="btn-primary btn-sm">解锁完整版</a>
+      <a href="index.html#pricing" class="btn-primary btn-sm">订阅邮件 ¥10/月</a>
     </div>
   </div>
 </nav>
@@ -37,7 +37,7 @@
       </div>
       <div class="dash-actions">
         <button class="btn-ghost btn-sm">⟳ 刷新</button>
-        <button class="btn-primary btn-sm">解锁完整 AI 分析</button>
+        <a href="#" class="btn-primary btn-sm">📩 订阅每日邮件 ¥10/月</a>
       </div>
     </header>
 
@@ -150,22 +150,37 @@
       </div>
     </section>
 
-    <!-- 付费墙提示 -->
-    <section class="paywall">
-      <div class="paywall-inner">
-        <div class="paywall-tag">🔒 专业版功能</div>
-        <h3>解锁完整 AI 9 维度深度分析 + 语音播报</h3>
-        <p>包括：宏观要情解读 · 美股复盘 · 大盘结构分析 · A 股主线判断 · 板块轮动 · 资金热点 · 后市预测 · 风险提示 · 操作策略</p>
-        <a href="index.html#pricing" class="btn-primary btn-lg">¥19.9/月 立即订阅 →</a>
-      </div>
-      <!-- 模糊预览 -->
-      <div class="preview-blur">
-        <div class="preview-line"></div>
-        <div class="preview-line" style="width:90%"></div>
-        <div class="preview-line" style="width:85%"></div>
-        <div class="preview-line" style="width:70%"></div>
-        <div class="preview-line" style="width:80%"></div>
-        <div class="preview-line" style="width:60%"></div>
+    <!-- 邮件订阅 CTA -->
+    <section class="email-cta">
+      <div class="email-cta-inner">
+        <div class="email-cta-left">
+          <div class="email-tag">📩 可选 · 每月 ¥10</div>
+          <h3>想省事？让 AI 把今天的分析<br>直接发到你邮箱</h3>
+          <p>每天 08:00 准时收到 Claude AI 写好的 9 维度深度分析 + MP3 语音播报。<br>所有指标网站永久免费，这只是给图省事的朋友准备的。</p>
+          <form class="email-form" onsubmit="alert('订阅功能即将开放，敬请期待！'); return false;">
+            <input type="email" placeholder="你的邮箱地址" required>
+            <button type="submit" class="btn-primary">订阅 ¥10/月</button>
+          </form>
+          <p class="email-note">✓ 7 天无理由退款 &nbsp; ✓ 随时可取消 &nbsp; ✓ 不会发垃圾邮件</p>
+        </div>
+        <div class="email-cta-right">
+          <div class="email-mock">
+            <div class="email-mock-head">
+              <span class="dot red"></span>
+              <span class="dot amber"></span>
+              <span class="dot green"></span>
+              <span class="email-mock-title">📈 财经早报 · AI 晨间播报</span>
+            </div>
+            <div class="email-mock-body">
+              <div class="mock-line"><b class="accent">【宏观要情】</b> 美联储 11 月纪要释放鸽派...</div>
+              <div class="mock-line"><b class="accent">【美股复盘】</b> 纳指领涨，VIX 回落至 14.2...</div>
+              <div class="mock-line"><b class="accent">【A 股主线】</b> AI 算力板块连续 3 日强势...</div>
+              <div class="mock-line"><b class="accent">【板块轮动】</b> 资金从军工流向消费电子...</div>
+              <div class="mock-line"><b class="accent">【今日策略】</b> 建议 7 成仓，重点关注...</div>
+              <div class="mock-audio">🎙️ briefing_20260514.mp3 · 6:42</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

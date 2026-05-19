@@ -23,7 +23,7 @@
       <a href="#features">功能</a>
       <a href="#pricing">定价</a>
       <a href="dashboard.html">仪表盘演示</a>
-      <a href="#" class="btn-primary btn-sm">立即订阅</a>
+      <a href="#pricing" class="btn-primary btn-sm">订阅邮件</a>
     </div>
   </div>
 </nav>
@@ -47,8 +47,8 @@
     </p>
 
     <div class="hero-cta">
-      <a href="#pricing" class="btn-primary btn-lg">¥19.9/月 立即订阅</a>
-      <a href="dashboard.html" class="btn-ghost btn-lg">看看长什么样 →</a>
+      <a href="dashboard.html" class="btn-primary btn-lg">免费查看实时指标 →</a>
+      <a href="#pricing" class="btn-ghost btn-lg">订阅每日 AI 邮件 ¥10/月</a>
     </div>
 
     <div class="hero-meta">
@@ -133,52 +133,46 @@
 <!-- PRICING -->
 <section id="pricing" class="pricing">
   <div class="container">
-    <h2 class="section-title">透明定价<span class="accent">. 随时取消</span></h2>
-    <p class="section-desc">早鸟价限时 ¥19.9/月，正式版本 ¥39/月</p>
+    <h2 class="section-title">所有指标<span class="accent">永久免费</span></h2>
+    <p class="section-desc">想每天收到 AI 写好的深度分析？订阅邮件版 ¥10/月，一杯奶茶钱</p>
 
-    <div class="plans">
+    <div class="plans plans-two">
+      <!-- 免费 -->
       <div class="plan">
-        <div class="plan-name">免费体验</div>
-        <div class="plan-price">¥0</div>
+        <div class="plan-name">免费版</div>
+        <div class="plan-price">¥0<small>/永久</small></div>
+        <div class="plan-old">注册即用，无需付费</div>
         <ul class="plan-feat">
-          <li>✓ 每日宏观仪表盘</li>
-          <li>✓ 当日摘要（前 200 字）</li>
-          <li>✗ 完整 AI 分析</li>
-          <li>✗ 语音播报</li>
-          <li>✗ 历史归档</li>
+          <li>✓ 12+ 实时风险指标</li>
+          <li>✓ 自动判定<b class="green">正常</b>/<b class="amber">警戒</b>/<b class="red">危险</b></li>
+          <li>✓ CNN Fear & Greed 情绪计</li>
+          <li>✓ 美股 / A股 / 美债 / 信用利差</li>
+          <li>✓ 每日当日摘要</li>
+          <li>✓ 历史指标归档</li>
         </ul>
-        <a href="#" class="btn-ghost btn-full">立即体验</a>
+        <a href="dashboard.html" class="btn-ghost btn-full">立即查看仪表盘 →</a>
       </div>
 
+      <!-- 邮件订阅 -->
       <div class="plan plan-pro">
-        <div class="plan-badge">早鸟限定</div>
-        <div class="plan-name">专业版</div>
-        <div class="plan-price">¥19.9<small>/月</small></div>
-        <div class="plan-old">原价 ¥39/月</div>
+        <div class="plan-badge">深度专属</div>
+        <div class="plan-name">邮件订阅</div>
+        <div class="plan-price">¥10<small>/月</small></div>
+        <div class="plan-old">¥100/年 · 立省 ¥20</div>
         <ul class="plan-feat">
-          <li>✓ 完整 AI 9 维度分析</li>
-          <li>✓ MP3 语音播报</li>
-          <li>✓ 实时宏观仪表盘</li>
-          <li>✓ 历史归档检索</li>
-          <li>✓ 重大事件实时推送</li>
+          <li>✓ <b>免费版全部功能</b></li>
+          <li>✓ 每日 08:00 邮件准时送达</li>
+          <li>✓ Claude AI 9 维度深度分析</li>
+          <li>✓ MP3 语音播报（通勤可听）</li>
+          <li>✓ HTML 排版精美晨报</li>
+          <li>✓ 重大风险事件实时邮件预警</li>
+          <li>✓ 7 天无理由退款</li>
         </ul>
-        <a href="#" class="btn-primary btn-full">立即订阅</a>
-      </div>
-
-      <div class="plan">
-        <div class="plan-name">年度版</div>
-        <div class="plan-price">¥199<small>/年</small></div>
-        <div class="plan-old">月省 ¥3.3 (相当于八折)</div>
-        <ul class="plan-feat">
-          <li>✓ 专业版全部功能</li>
-          <li>✓ 一次付费用一年</li>
-          <li>✓ 优先支持</li>
-          <li>✓ 重大策略复盘</li>
-          <li>✓ 早期新功能内测</li>
-        </ul>
-        <a href="#" class="btn-ghost btn-full">选择年度</a>
+        <a href="#subscribe" class="btn-primary btn-full">立即订阅 ¥10/月</a>
       </div>
     </div>
+
+    <p class="pricing-note">💡 网站所有指标永久免费 · 邮件订阅纯粹为图省事的朋友准备</p>
   </div>
 </section>
 
@@ -196,12 +190,16 @@
         <p>我们用的是 Anthropic Claude 旗舰模型，是目前公认推理能力最强的 AI 之一。它不预测涨跌，而是帮你结构化梳理当天的关键信息和影响逻辑。</p>
       </details>
       <details>
-        <summary>怎么收到播报?</summary>
-        <p>每天 08:00 你会在本网站看到当日完整播报。也可以扫码绑定微信，新内容实时通知。</p>
+        <summary>不订阅邮件能用什么?</summary>
+        <p>所有指标永久免费：12+ 风险指标实时监控、自动预警判定、Fear & Greed 情绪计、历史归档。打开网站就能看，不需要登录或付费。</p>
+      </details>
+      <details>
+        <summary>订阅邮件能多得到什么?</summary>
+        <p>每天 08:00 准时收到 Claude AI 写好的 9 维度深度分析（约 1200 字）+ MP3 语音播报。重大风险事件还会实时邮件预警。</p>
       </details>
       <details>
         <summary>能退款吗?</summary>
-        <p>订阅后 7 天内全额退款，无需理由。</p>
+        <p>邮件订阅 7 天内全额退款，无需理由。</p>
       </details>
       <details>
         <summary>周末发吗?</summary>
