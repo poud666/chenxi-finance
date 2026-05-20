@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-05-20T14:09:04.969045+00:00",
-  "updated_at_cn": "2026-05-20 22:09:04",
+  "updated_at": "2026-05-20T17:33:12.101795+00:00",
+  "updated_at_cn": "2026-05-21 01:33:12",
   "indicators": [
     {
       "name": "VIX",
       "name_cn": "恐慌指数",
       "sub": "标普500隐含波动率",
-      "value": 17.84,
-      "change": -1.03,
-      "change_pct": -5.46,
+      "value": 17.67,
+      "change": -1.2,
+      "change_pct": -6.36,
       "unit": "",
       "status": "ok",
       "desc": "标普 500 未来 30 天的隐含波动率。数值越高，市场越恐慌。<b>>25 紧张 · >30 恐慌</b>。",
@@ -44,7 +44,7 @@
         18.43,
         17.82,
         18.06,
-        17.84
+        17.67
       ]
     },
     {
@@ -95,9 +95,9 @@
       "name": "10Y",
       "name_cn": "美债收益率",
       "sub": "10年期",
-      "value": 4.649,
-      "change": 0.399,
-      "change_pct": 9.39,
+      "value": 4.586,
+      "change": 0.336,
+      "change_pct": 7.91,
       "unit": "%",
       "status": "ok",
       "desc": "全球资产定价的\"无风险锚\"。上升压制股市估值，尤其是科技股。<b>>4.8% 关键 · >5% 警报</b>。",
@@ -133,16 +133,16 @@
         4.595,
         4.623,
         4.667,
-        4.649
+        4.586
       ]
     },
     {
       "name": "DXY",
       "name_cn": "美元指数",
       "sub": "美元强弱",
-      "value": 99.403,
-      "change": 1.353,
-      "change_pct": 1.38,
+      "value": 99.125,
+      "change": 1.075,
+      "change_pct": 1.1,
       "unit": "",
       "status": "ok",
       "desc": "美元对一篮子主要货币的强弱。走强意味着全球流动性收紧、新兴市场承压。<b>>107 流动性紧张</b>。",
@@ -178,14 +178,14 @@
         99.27,
         98.97,
         99.3,
-        99.403
+        99.125
       ]
     },
     {
       "name": "10Y-2Y",
       "name_cn": "期限利差",
       "sub": "10年-2年美债",
-      "value": 1.079,
+      "value": 1.021,
       "change": null,
       "change_pct": null,
       "unit": "%",
@@ -206,9 +206,9 @@
       "name": "S&P 500",
       "name_cn": "标普500",
       "sub": "美股大盘",
-      "value": 7366.28,
-      "change": 257.14,
-      "change_pct": 3.62,
+      "value": 7421.31,
+      "change": 312.17,
+      "change_pct": 4.39,
       "unit": "",
       "status": "ok",
       "desc": "美股最具代表性的指数，由 500 家大公司组成。<b>跌破 200 日均线</b>通常预示中期趋势转弱。",
@@ -237,16 +237,16 @@
         7408.5,
         7403.0498,
         7353.6099,
-        7366.2798
+        7421.3101
       ]
     },
     {
       "name": "NDX",
       "name_cn": "纳指100",
       "sub": "科技大盘",
-      "value": 28980.344,
-      "change": 2390.004,
-      "change_pct": 8.99,
+      "value": 29208.727,
+      "change": 2618.387,
+      "change_pct": 9.85,
       "unit": "",
       "status": "ok",
       "desc": "纳斯达克 100 指数，科技股权重高。对利率最敏感，是风险偏好的晴雨表。",
@@ -275,7 +275,7 @@
         29125.1992,
         28994.3691,
         28818.8398,
-        28980.3438
+        29208.7266
       ]
     },
     {
@@ -300,9 +300,9 @@
       "name": "KBW",
       "name_cn": "银行指数",
       "sub": "大型银行",
-      "value": 163.9645,
-      "change": -7.0055,
-      "change_pct": -4.1,
+      "value": 166.3271,
+      "change": -4.6429,
+      "change_pct": -2.72,
       "unit": "",
       "status": "ok",
       "desc": "美国 24 家大型银行股的加权指数。<b>大幅跑输标普</b>常预示银行业承压（如 2023 年硅谷银行事件）。",
@@ -331,16 +331,16 @@
         162.8,
         163.9,
         162.52,
-        163.9645
+        166.3271
       ]
     },
     {
       "name": "KRE",
       "name_cn": "区域银行",
       "sub": "ETF",
-      "value": 68.445,
-      "change": -2.195,
-      "change_pct": -3.11,
+      "value": 68.875,
+      "change": -1.765,
+      "change_pct": -2.5,
       "unit": "",
       "status": "ok",
       "desc": "中小银行 ETF。<b>对利率和商业地产暴露最大</b>，是地方性银行危机的先行指标。",
@@ -369,16 +369,16 @@
         66.97,
         67.92,
         67.56,
-        68.445
+        68.875
       ]
     },
     {
       "name": "XLF",
       "name_cn": "金融业 ETF",
       "sub": "大型金融股",
-      "value": 51.105,
-      "change": -1.525,
-      "change_pct": -2.9,
+      "value": 51.61,
+      "change": -1.02,
+      "change_pct": -1.94,
       "unit": "",
       "status": "ok",
       "desc": "标普金融板块 ETF，覆盖大行、保险、券商。<b>持续跑输大盘</b>反映金融压力。",
@@ -407,7 +407,7 @@
         51.1,
         51.74,
         51.1,
-        51.105
+        51.6101
       ]
     },
     {
@@ -458,9 +458,9 @@
       "name": "VVIX",
       "name_cn": "VIX 的 VIX",
       "sub": "波动率的波动率",
-      "value": 94.04,
-      "change": -4.11,
-      "change_pct": -4.19,
+      "value": 96.76,
+      "change": -1.39,
+      "change_pct": -1.42,
       "unit": "",
       "status": "ok",
       "desc": "VIX 本身的隐含波动率。<b>>130</b> 表示市场对 VIX 暴涨有预期，常先于 VIX 真正飙升。",
@@ -496,16 +496,16 @@
         92.94,
         91.18,
         94.61,
-        94.04
+        96.76
       ]
     },
     {
       "name": "VXN",
       "name_cn": "纳指 VIX",
       "sub": "纳斯达克100波动率",
-      "value": 24.39,
-      "change": 1.46,
-      "change_pct": 6.37,
+      "value": 23.97,
+      "change": 1.04,
+      "change_pct": 4.54,
       "unit": "",
       "status": "ok",
       "desc": "纳斯达克 100 的隐含波动率。<b>常高于 VIX</b>，反映科技股波动更大。两者差距扩大时科技股承压。",
@@ -541,15 +541,15 @@
         25.33,
         24.21,
         24.09,
-        24.39
+        23.97
       ]
     },
     {
       "name": "RSP/SPY",
       "name_cn": "市场广度",
       "sub": "等权 vs 市值加权",
-      "value": -4.7,
-      "change": -4.7,
+      "value": -4.48,
+      "change": -4.48,
       "change_pct": null,
       "unit": "%",
       "status": "alert",
@@ -561,8 +561,8 @@
       "name": "SPHB/SPLV",
       "name_cn": "风险偏好",
       "sub": "高Beta vs 低波动",
-      "value": 2.81,
-      "change": 2.81,
+      "value": 4.41,
+      "change": 4.41,
       "change_pct": null,
       "unit": "%",
       "status": "ok",
@@ -591,57 +591,57 @@
         {
           "name": "科技",
           "sym": "XLK",
-          "change_pct": 13.35
+          "change_pct": 14.09
         },
         {
           "name": "能源",
           "sym": "XLE",
-          "change_pct": 11.29
+          "change_pct": 9.2
         },
         {
           "name": "必需消费",
           "sym": "XLP",
-          "change_pct": 3.04
+          "change_pct": 3.99
         },
         {
           "name": "医疗",
           "sym": "XLV",
-          "change_pct": -0.39
+          "change_pct": -0.43
         },
         {
           "name": "房地产",
           "sym": "XLRE",
-          "change_pct": -1.51
-        },
-        {
-          "name": "公用事业",
-          "sym": "XLU",
-          "change_pct": -2.43
+          "change_pct": -0.77
         },
         {
           "name": "工业",
           "sym": "XLI",
-          "change_pct": -2.73
+          "change_pct": -1.61
         },
         {
           "name": "金融",
           "sym": "XLF",
-          "change_pct": -2.9
-        },
-        {
-          "name": "通信",
-          "sym": "XLC",
-          "change_pct": -3.22
+          "change_pct": -1.93
         },
         {
           "name": "可选消费",
           "sym": "XLY",
-          "change_pct": -3.9
+          "change_pct": -1.99
+        },
+        {
+          "name": "公用事业",
+          "sym": "XLU",
+          "change_pct": -2.56
+        },
+        {
+          "name": "通信",
+          "sym": "XLC",
+          "change_pct": -2.64
         },
         {
           "name": "原材料",
           "sym": "XLB",
-          "change_pct": -5.59
+          "change_pct": -4.92
         }
       ]
     },
@@ -649,9 +649,9 @@
       "name": "VNQ",
       "name_cn": "REIT 综合 ETF",
       "sub": "商业地产",
-      "value": 95.345,
-      "change": -1.685,
-      "change_pct": -1.74,
+      "value": 96.09,
+      "change": -0.94,
+      "change_pct": -0.97,
       "unit": "",
       "status": "ok",
       "desc": "美国 REITs 综合 ETF。<b>商业地产暴跌</b>会冲击区域银行资产质量，是系统性风险传导链关键一环。",
@@ -680,16 +680,16 @@
         93.91,
         95.01,
         95.28,
-        95.345
+        96.09
       ]
     },
     {
       "name": "IYR",
       "name_cn": "REIT ETF",
       "sub": "iShares 房地产",
-      "value": 101.29,
-      "change": -1.94,
-      "change_pct": -1.88,
+      "value": 102.05,
+      "change": -1.18,
+      "change_pct": -1.14,
       "unit": "",
       "status": "ok",
       "desc": "iShares 美国房地产 ETF，与 VNQ 互相印证。同步暴跌时警惕地产链系统性风险。",
@@ -718,16 +718,16 @@
         99.8,
         100.91,
         101.26,
-        101.29
+        102.05
       ]
     },
     {
       "name": "ARCC",
       "name_cn": "BDC 龙头",
       "sub": "私募信贷",
-      "value": 18.465,
-      "change": -0.655,
-      "change_pct": -3.43,
+      "value": 18.73,
+      "change": -0.39,
+      "change_pct": -2.04,
       "unit": "",
       "status": "ok",
       "desc": "最大的 BDC（商业发展公司），是私募信贷市场的标杆。<b>影子银行</b>风险的先行指标。",
@@ -756,7 +756,7 @@
         18.9,
         18.72,
         18.57,
-        18.465
+        18.73
       ]
     }
   ],
@@ -764,7 +764,7 @@
     "name": "Fear & Greed",
     "name_cn": "恐慌贪婪指数",
     "sub": "CNN 综合情绪",
-    "value": 60.9,
+    "value": 60.7,
     "rating": "greed",
     "prev_close": 60.4,
     "prev_1_week": 64.0,
