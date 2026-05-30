@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-05-30T07:30:08.985745+00:00",
-  "updated_at_cn": "2026-05-30 15:30:08",
+  "updated_at": "2026-05-30T09:34:11.897473+00:00",
+  "updated_at_cn": "2026-05-30 17:34:11",
   "indicators": [
     {
       "name": "VIX",
@@ -554,11 +554,11 @@
     {
       "name": "板块广度",
       "name_cn": "Sector Breadth",
-      "sub": "7/11 板块上涨",
-      "value": 7,
+      "sub": "6/10 板块上涨",
+      "value": 6,
       "change": null,
-      "change_pct": 63.6,
-      "unit": "/11",
+      "change_pct": 60.0,
+      "unit": "/10",
       "status": "ok",
       "desc": "S&P 11 大板块中今日上涨的数量。<b>普涨（≥8）</b>= 健康上行；<b>分化（4-7）</b>= 轮动；<b>集体下跌（≤3）</b>= 系统性风险。",
       "category": "tier3",
@@ -583,11 +583,6 @@
           "name": "可选消费",
           "sym": "XLY",
           "change_pct": 3.45
-        },
-        {
-          "name": "工业",
-          "sym": "XLI",
-          "change_pct": 1.88
         },
         {
           "name": "房地产",
