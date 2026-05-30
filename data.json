@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-05-30T11:05:21.296158+00:00",
-  "updated_at_cn": "2026-05-30 19:05:21",
+  "updated_at": "2026-05-30T12:20:07.223692+00:00",
+  "updated_at_cn": "2026-05-30 20:20:07",
   "indicators": [
     {
       "name": "VIX",
@@ -554,11 +554,11 @@
     {
       "name": "板块广度",
       "name_cn": "Sector Breadth",
-      "sub": "7/11 板块上涨",
-      "value": 7,
+      "sub": "6/10 板块上涨",
+      "value": 6,
       "change": null,
-      "change_pct": 63.6,
-      "unit": "/11",
+      "change_pct": 60.0,
+      "unit": "/10",
       "status": "ok",
       "desc": "S&P 11 大板块中今日上涨的数量。<b>普涨（≥8）</b>= 健康上行；<b>分化（4-7）</b>= 轮动；<b>集体下跌（≤3）</b>= 系统性风险。",
       "category": "tier3",
@@ -573,11 +573,6 @@
           "name": "科技",
           "sym": "XLK",
           "change_pct": 20.06
-        },
-        {
-          "name": "医疗",
-          "sym": "XLV",
-          "change_pct": 4.64
         },
         {
           "name": "可选消费",
