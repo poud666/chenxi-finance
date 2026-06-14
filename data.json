@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-06-14T13:19:11.150258+00:00",
-  "updated_at_cn": "2026-06-14 21:19:11",
+  "updated_at": "2026-06-14T15:24:28.495313+00:00",
+  "updated_at_cn": "2026-06-14 23:24:28",
   "indicators": [
     {
       "name": "VIX",
@@ -141,9 +141,9 @@
       "name": "DXY",
       "name_cn": "美元指数",
       "sub": "美元强弱",
-      "value": 99.807,
-      "change": 0.927,
-      "change_pct": 0.94,
+      "value": 99.75,
+      "change": 0.87,
+      "change_pct": 0.88,
       "unit": "",
       "status": "ok",
       "desc": "美元对一篮子主要货币的强弱。走强意味着全球流动性收紧、新兴市场承压。<b>>107 流动性紧张</b>。",
@@ -565,11 +565,11 @@
     {
       "name": "板块广度",
       "name_cn": "Sector Breadth",
-      "sub": "7/11 板块上涨",
-      "value": 7,
+      "sub": "6/10 板块上涨",
+      "value": 6,
       "change": null,
-      "change_pct": 63.6,
-      "unit": "/11",
+      "change_pct": 60.0,
+      "unit": "/10",
       "status": "ok",
       "desc": "S&P 11 大板块中今日上涨的数量。<b>普涨（≥8）</b>= 健康上行；<b>分化（4-7）</b>= 轮动；<b>集体下跌（≤3）</b>= 系统性风险。",
       "category": "tier3",
@@ -594,11 +594,6 @@
           "name": "金融",
           "sym": "XLF",
           "change_pct": 3.41
-        },
-        {
-          "name": "房地产",
-          "sym": "XLRE",
-          "change_pct": 1.75
         },
         {
           "name": "必需消费",
