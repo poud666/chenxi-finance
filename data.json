@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-06-21T11:34:43.225011+00:00",
-  "updated_at_cn": "2026-06-21 19:34:43",
+  "updated_at": "2026-06-21T13:28:11.708705+00:00",
+  "updated_at_cn": "2026-06-21 21:28:11",
   "indicators": [
     {
       "name": "VIX",
@@ -294,8 +294,8 @@
       "name": "KBW",
       "name_cn": "银行指数",
       "sub": "大型银行",
-      "value": 179.7528,
-      "change": 15.8528,
+      "value": 179.753,
+      "change": 15.853,
       "change_pct": 9.67,
       "unit": "",
       "status": "ok",
