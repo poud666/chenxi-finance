@@ -8,11 +8,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import smtplib
 import sys
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+from email.message import EmailMessage
 from pathlib import Path
 from typing import Optional
 from urllib.error import URLError
@@ -50,6 +53,20 @@ class RateSignal:
     confidence: str
     reasons: list[str]
     missing_expectations: list[str]
+
+
+def env_bool(name: str, default: bool = False) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def env_int(name: str, default: int) -> int:
+    value = os.getenv(name, "").strip()
+    if not value:
+        return default
+    return int(value)
 
 
 def read_last_release(state_file: str) -> str:
@@ -362,6 +379,81 @@ def render_markdown(data: NfpData, signal: RateSignal) -> str:
 """
 
 
+def render_raw_markdown(data: NfpData) -> str:
+    payroll = f"{data.payrolls_k}k" if data.payrolls_k is not None else "未解析到"
+    unemployment = f"{data.unemployment_rate:g}%" if data.unemployment_rate is not None else "未解析到"
+    participation = (
+        f"{data.labor_force_participation_rate:g}%"
+        if data.labor_force_participation_rate is not None
+        else "未解析到"
+    )
+    ahe_mom = (
+        f"{data.average_hourly_earnings_mom:g}%"
+        if data.average_hourly_earnings_mom is not None
+        else "未解析到"
+    )
+    ahe_yoy = (
+        f"{data.average_hourly_earnings_yoy:g}%"
+        if data.average_hourly_earnings_yoy is not None
+        else "未解析到"
+    )
+    revision = f"{data.revision_combined_k:+d}k" if data.revision_combined_k is not None else "未解析到"
+
+    return f"""# 美国非农原始数据快报
+
+发布时间：{data.embargo_line or "未解析到"}
+报告月份：{data.release_title or "未解析到"}
+抓取时间 UTC：{data.fetched_at_utc}
+官方来源：{data.source_url}
+
+## 核心数据
+
+- 非农新增就业：{payroll}
+- 失业率：{unemployment}
+- 劳动参与率：{participation}
+- 平均时薪环比：{ahe_mom}
+- 平均时薪同比：{ahe_yoy}
+- 前两月合计修正：{revision}
+"""
+
+
+def send_email(args: argparse.Namespace, subject: str, body: str) -> None:
+    if not args.email_to:
+        return
+
+    missing = [
+        name
+        for name, value in {
+            "SMTP_HOST": args.smtp_host,
+            "SMTP_USERNAME": args.smtp_username,
+            "SMTP_PASSWORD": args.smtp_password,
+        }.items()
+        if not value
+    ]
+    if missing:
+        print(f"邮件未发送，缺少配置：{', '.join(missing)}", file=sys.stderr, flush=True)
+        return
+
+    sender = args.email_from or args.smtp_username
+    message = EmailMessage()
+    message["Subject"] = subject
+    message["From"] = sender
+    message["To"] = args.email_to
+    message.set_content(body, subtype="plain", charset="utf-8")
+
+    if args.smtp_ssl:
+        with smtplib.SMTP_SSL(args.smtp_host, args.smtp_port, timeout=30) as smtp:
+            smtp.login(args.smtp_username, args.smtp_password)
+            smtp.send_message(message)
+    else:
+        with smtplib.SMTP(args.smtp_host, args.smtp_port, timeout=30) as smtp:
+            if not args.smtp_no_tls:
+                smtp.starttls()
+            smtp.login(args.smtp_username, args.smtp_password)
+            smtp.send_message(message)
+    print(f"邮件已发送：{subject}", flush=True)
+
+
 def write_outputs(data: NfpData, signal: RateSignal, output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -401,8 +493,13 @@ def run_once(args: argparse.Namespace) -> tuple[bool, Optional[NfpData], Optiona
             flush=True,
         )
         return False, data, None
+    raw_markdown = render_raw_markdown(data)
+    send_email(args, f"美国非农原始数据：{data.release_title}", raw_markdown)
+
     signal = analyze_rate_signal(data, args)
-    print(render_markdown(data, signal), flush=True)
+    analysis_markdown = render_markdown(data, signal)
+    print(analysis_markdown, flush=True)
+    send_email(args, f"美国非农降息预期判断：{signal.direction}", analysis_markdown)
     if args.output_dir:
         write_outputs(data, signal, Path(args.output_dir))
     if args.only_new:
@@ -425,6 +522,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--expected-ahe-mom", type=float, default=None, help="Consensus average hourly earnings MoM forecast, percent.")
     parser.add_argument("--payroll-threshold-k", type=float, default=50, help="Payroll surprise threshold in thousands.")
     parser.add_argument("--revision-threshold-k", type=int, default=50, help="Combined revision threshold in thousands.")
+    parser.add_argument("--email-to", default=os.getenv("NFP_EMAIL_TO", ""), help="Recipient email address. Defaults to NFP_EMAIL_TO.")
+    parser.add_argument("--email-from", default=os.getenv("NFP_EMAIL_FROM", ""), help="Sender email address. Defaults to NFP_EMAIL_FROM or SMTP username.")
+    parser.add_argument("--smtp-host", default=os.getenv("SMTP_HOST", ""), help="SMTP host. Defaults to SMTP_HOST.")
+    parser.add_argument("--smtp-port", type=int, default=env_int("SMTP_PORT", 587), help="SMTP port. Defaults to SMTP_PORT or 587.")
+    parser.add_argument("--smtp-username", default=os.getenv("SMTP_USERNAME", ""), help="SMTP username. Defaults to SMTP_USERNAME.")
+    parser.add_argument("--smtp-password", default=os.getenv("SMTP_PASSWORD", ""), help="SMTP password or app password. Defaults to SMTP_PASSWORD.")
+    parser.add_argument("--smtp-ssl", action="store_true", default=env_bool("SMTP_SSL", False), help="Use SMTP over SSL, usually port 465.")
+    parser.add_argument("--smtp-no-tls", action="store_true", default=env_bool("SMTP_NO_TLS", False), help="Disable STARTTLS for non-SSL SMTP.")
     return parser.parse_args()
 
 

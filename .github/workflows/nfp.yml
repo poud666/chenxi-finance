@@ -24,6 +24,10 @@ on:
         description: "Consensus average hourly earnings MoM forecast, percent"
         required: false
         default: ""
+      email_to:
+        description: "Optional recipient email override"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -49,6 +53,15 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || needs.gate.outputs.is_release_day == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      NFP_EMAIL_TO: ${{ github.event.inputs.email_to || vars.NFP_EMAIL_TO }}
+      NFP_EMAIL_FROM: ${{ vars.NFP_EMAIL_FROM }}
+      SMTP_HOST: ${{ secrets.SMTP_HOST || vars.SMTP_HOST }}
+      SMTP_PORT: ${{ vars.SMTP_PORT }}
+      SMTP_USERNAME: ${{ secrets.SMTP_USERNAME || vars.SMTP_USERNAME }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      SMTP_SSL: ${{ vars.SMTP_SSL }}
+      SMTP_NO_TLS: ${{ vars.SMTP_NO_TLS }}
     steps:
       - uses: actions/checkout@v4
 

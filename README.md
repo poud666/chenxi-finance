@@ -56,8 +56,19 @@ Register-ScheduledTask -TaskName "NFP_BLS_Watch" -Action $Action -Trigger $Trigg
 - `NFP_EXPECTED_PAYROLLS_K`
 - `NFP_EXPECTED_UNEMPLOYMENT`
 - `NFP_EXPECTED_AHE_MOM`
+- `NFP_EMAIL_TO`
+- `NFP_EMAIL_FROM`
+- `SMTP_PORT`，默认 `587`
+- `SMTP_SSL`，使用 465 端口时设为 `true`
+- `SMTP_NO_TLS`，通常不用设置
+- `SMTP_HOST`，也可以放在 Secrets
+- `SMTP_USERNAME`，也可以放在 Secrets
 
-如果不设置，工作流仍会抓取数据，但降息预期判断的置信度会降低。工作流产物会上传为 GitHub Actions artifact，包含 `outputs/` 和 `state/`。
+在 `Settings -> Secrets and variables -> Actions -> Secrets` 里设置：
+
+- `SMTP_PASSWORD`
+
+抓到目标月份数据后会先发一封原始数据邮件；完成降息预期判断后会再发一封分析邮件。如果使用 QQ 邮箱，`SMTP_PASSWORD` 应填写 QQ 邮箱的 SMTP 授权码，不是登录密码。如果不设置市场预期，工作流仍会抓取数据，但降息预期判断的置信度会降低。如果不设置 SMTP 或收件人，工作流仍会生成 artifact，但不会发邮件。工作流产物会上传为 GitHub Actions artifact，包含 `outputs/` 和 `state/`。
 
 ## 市场预期
 
