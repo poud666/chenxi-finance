@@ -5,6 +5,7 @@
     {
       "reference_month": "June 2026",
       "expected_payrolls_k": 110.0,
+      "parsed_reference_month": "June 2026",
       "expected_unemployment": 4.3,
       "expected_ahe_mom": 0.3,
       "source": "https://tradingeconomics.com/united-states/non-farm-payrolls",

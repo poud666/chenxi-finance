@@ -47,7 +47,7 @@ Register-ScheduledTask -TaskName "NFP_BLS_Watch" -Action $Action -Trigger $Trigg
 仓库里包含两个 GitHub Actions workflow：
 
 - `.github/workflows/update-nfp-calendar.yml`：每月 1 号查阅 BLS 官方日程，更新 `.github/nfp_release_dates.json` 里的本月真实公布日。
-- `.github/workflows/update-nfp-calendar.yml` 同时会从 Trading Economics 的非农页面抓取本月 consensus，写入 `.github/nfp_expectations.json`。
+- `.github/workflows/update-nfp-calendar.yml` 同时会从 Trading Economics 的非农页面抓取本月 consensus，写入 `.github/nfp_expectations.json`。脚本会解析来源页面里的预期月份，例如 `June 2026`，并要求它和 BLS 公布日目标月份完全一致，否则失败，不写入。
 - `.github/workflows/nfp.yml`：香港时间 20:28 附近启动，但只有当天匹配 `.github/nfp_release_dates.json` 里的真实公布日时，才进入 5 秒一次、持续 20 分钟的 BLS API 轮询。判断降息预期时优先使用月初已抓取的 `.github/nfp_expectations.json`，也可以用 GitHub Variables 或手动触发参数覆盖。
 
 非农通常是每月第一个星期五，但遇到美国节假日会提前或调整，所以 workflow 不直接写死第一个星期五。月初查阅 BLS 日程失败时，更新脚本会退回到“第一个星期五，若遇美国联邦假日则前移到前一工作日”的规则，并在 JSON 中标记 `verified_by`。

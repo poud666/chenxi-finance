@@ -70,9 +70,13 @@ def clean_html(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def parse_expectations(page_text: str) -> dict[str, float]:
+def parse_expectations(page_text: str) -> dict[str, float | str]:
     clean = clean_html(page_text)
-    payroll = re.search(r"expected to have added\s+([0-9.]+)\s*K jobs", clean, flags=re.IGNORECASE)
+    payroll = re.search(
+        r"expected to have added\s+([0-9.]+)\s*K jobs in\s+([A-Za-z]+)\s+(\d{4})",
+        clean,
+        flags=re.IGNORECASE,
+    )
     unemployment = re.search(
         r"unemployment rate is forecast to (?:remain unchanged at|rise to|fall to|edge up to|edge down to)\s+([0-9.]+)%",
         clean,
@@ -85,7 +89,7 @@ def parse_expectations(page_text: str) -> dict[str, float]:
     )
     missing = []
     if not payroll:
-        missing.append("payrolls")
+        missing.append("payrolls and expectation month")
     if not unemployment:
         missing.append("unemployment")
     if not ahe_mom:
@@ -95,6 +99,7 @@ def parse_expectations(page_text: str) -> dict[str, float]:
 
     return {
         "expected_payrolls_k": float(payroll.group(1)),
+        "parsed_reference_month": f"{payroll.group(2).title()} {payroll.group(3)}",
         "expected_unemployment": float(unemployment.group(1)),
         "expected_ahe_mom": float(ahe_mom.group(1)),
     }
@@ -110,7 +115,7 @@ def read_expectations(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def upsert_expectation(payload: dict, reference_month: str, values: dict[str, float], run_date: date) -> None:
+def upsert_expectation(payload: dict, reference_month: str, values: dict[str, float | str], run_date: date) -> None:
     item = {
         "reference_month": reference_month,
         **values,
@@ -137,6 +142,13 @@ def main() -> int:
     reference_month = target_release_from_calendar(calendar_path, run_date)
 
     values = parse_expectations(fetch_text(TE_NFP_URL))
+    parsed_reference_month = str(values["parsed_reference_month"])
+    if parsed_reference_month.lower() != reference_month.lower():
+        raise ValueError(
+            "Expectation month mismatch: "
+            f"calendar target is {reference_month}, source page says {parsed_reference_month}."
+        )
+
     payload = read_expectations(expectations_path)
     upsert_expectation(payload, reference_month, values, run_date)
     expectations_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

@@ -39,12 +39,20 @@ def main() -> int:
         print(f"No stored expectations for {args.target_release}")
         write_outputs(args.github_output, {"found": "false"})
         return 0
+    parsed_reference_month = match.get("parsed_reference_month", match.get("reference_month", ""))
+    if parsed_reference_month.lower() != args.target_release.lower():
+        raise ValueError(
+            "Stored expectation month mismatch: "
+            f"target is {args.target_release}, stored source month is {parsed_reference_month}."
+        )
 
     outputs = {
         "found": "true",
         "expected_payrolls_k": str(match["expected_payrolls_k"]),
         "expected_unemployment": str(match["expected_unemployment"]),
         "expected_ahe_mom": str(match["expected_ahe_mom"]),
+        "expectations_source": str(match.get("source", "")),
+        "expectations_reference_month": parsed_reference_month,
     }
     write_outputs(args.github_output, outputs)
     print(

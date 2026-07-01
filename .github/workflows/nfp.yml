@@ -41,6 +41,8 @@ jobs:
       expected_payrolls_k: ${{ steps.expectations.outputs.expected_payrolls_k }}
       expected_unemployment: ${{ steps.expectations.outputs.expected_unemployment }}
       expected_ahe_mom: ${{ steps.expectations.outputs.expected_ahe_mom }}
+      expectations_source: ${{ steps.expectations.outputs.expectations_source }}
+      expectations_reference_month: ${{ steps.expectations.outputs.expectations_reference_month }}
     steps:
       - uses: actions/checkout@v4
 
@@ -95,9 +97,9 @@ jobs:
         shell: bash
         run: |
           target="${{ github.event.inputs.target_release || needs.gate.outputs.target_release }}"
-          payrolls="${{ github.event.inputs.expected_payrolls_k || vars.NFP_EXPECTED_PAYROLLS_K || needs.gate.outputs.expected_payrolls_k }}"
-          unemployment="${{ github.event.inputs.expected_unemployment || vars.NFP_EXPECTED_UNEMPLOYMENT || needs.gate.outputs.expected_unemployment }}"
-          ahe_mom="${{ github.event.inputs.expected_ahe_mom || vars.NFP_EXPECTED_AHE_MOM || needs.gate.outputs.expected_ahe_mom }}"
+          payrolls="${{ github.event.inputs.expected_payrolls_k || needs.gate.outputs.expected_payrolls_k || vars.NFP_EXPECTED_PAYROLLS_K }}"
+          unemployment="${{ github.event.inputs.expected_unemployment || needs.gate.outputs.expected_unemployment || vars.NFP_EXPECTED_UNEMPLOYMENT }}"
+          ahe_mom="${{ github.event.inputs.expected_ahe_mom || needs.gate.outputs.expected_ahe_mom || vars.NFP_EXPECTED_AHE_MOM }}"
 
           args=(python nfp_monitor.py --watch --only-new --interval-seconds 5 --timeout-seconds 1200)
 
