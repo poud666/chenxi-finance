@@ -2,8 +2,9 @@ name: NFP BLS Monitor
 
 on:
   schedule:
-    # 20:28 Asia/Hong_Kong = 12:28 UTC. Wake during the usual NFP
-    # release window, then gate by the configured official calendar.
+    # 20:28 Asia/Hong_Kong = 12:28 UTC. The calendar is refreshed
+    # on the 1st; this workflow only monitors when the refreshed
+    # calendar says today is the real BLS release date.
     - cron: "28 12 1-8 * *"
   workflow_dispatch:
     inputs:

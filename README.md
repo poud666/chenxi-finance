@@ -44,9 +44,12 @@ Register-ScheduledTask -TaskName "NFP_BLS_Watch" -Action $Action -Trigger $Trigg
 
 ## GitHub Actions 自动工作流
 
-仓库里已经包含 `.github/workflows/nfp.yml`。它会在香港时间 20:28 附近的非农常见发布窗口启动，然后读取 `.github/nfp_release_dates.json`；只有当天匹配官方非农发布日期时，才会进入 5 秒一次、持续 20 分钟的 BLS API 轮询。
+仓库里包含两个 GitHub Actions workflow：
 
-需要每年维护 `.github/nfp_release_dates.json` 里的官方发布日期。当前文件已填入 2026-07 到 2026-12 的发布日。
+- `.github/workflows/update-nfp-calendar.yml`：每月 1 号查阅 BLS 官方日程，更新 `.github/nfp_release_dates.json` 里的本月真实公布日。
+- `.github/workflows/nfp.yml`：香港时间 20:28 附近启动，但只有当天匹配 `.github/nfp_release_dates.json` 里的真实公布日时，才进入 5 秒一次、持续 20 分钟的 BLS API 轮询。
+
+非农通常是每月第一个星期五，但遇到美国节假日会提前或调整，所以 workflow 不直接写死第一个星期五。月初查阅 BLS 日程失败时，更新脚本会退回到“第一个星期五，若遇美国联邦假日则前移到前一工作日”的规则，并在 JSON 中标记 `verified_by`。
 
 可选：在 GitHub 仓库 `Settings -> Secrets and variables -> Actions -> Variables` 里设置：
 
