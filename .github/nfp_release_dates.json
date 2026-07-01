@@ -6,7 +6,9 @@
   "dates": [
     {
       "release_date_hk": "2026-07-02",
-      "reference_month": "June 2026"
+      "reference_month": "June 2026",
+      "verified_by": "fallback_first_friday_adjusted_for_us_holidays",
+      "verified_at_utc": "2026-07-01T17:58:28+00:00"
     },
     {
       "release_date_hk": "2026-08-07",
@@ -28,5 +30,6 @@
       "release_date_hk": "2026-12-04",
       "reference_month": "November 2026"
     }
-  ]
+  ],
+  "last_checked_hk": "2026-07-02"
 }
