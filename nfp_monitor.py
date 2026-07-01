@@ -10,12 +10,10 @@ import argparse
 import json
 import os
 import re
-import smtplib
 import sys
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-from email.message import EmailMessage
 from pathlib import Path
 from typing import Optional
 from urllib.error import URLError
@@ -23,6 +21,7 @@ from urllib.request import Request, urlopen
 
 
 BLS_API_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+RESEND_EMAIL_URL = "https://api.resend.com/emails"
 DEFAULT_USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -53,20 +52,6 @@ class RateSignal:
     confidence: str
     reasons: list[str]
     missing_expectations: list[str]
-
-
-def env_bool(name: str, default: bool = False) -> bool:
-    value = os.getenv(name)
-    if value is None:
-        return default
-    return value.strip().lower() in {"1", "true", "yes", "on"}
-
-
-def env_int(name: str, default: int) -> int:
-    value = os.getenv(name, "").strip()
-    if not value:
-        return default
-    return int(value)
 
 
 def read_last_release(state_file: str) -> str:
@@ -424,9 +409,8 @@ def send_email(args: argparse.Namespace, subject: str, body: str) -> None:
     missing = [
         name
         for name, value in {
-            "SMTP_HOST": args.smtp_host,
-            "SMTP_USERNAME": args.smtp_username,
-            "SMTP_PASSWORD": args.smtp_password,
+            "RESEND_API_KEY": args.resend_api_key,
+            "NFP_EMAIL_FROM": args.email_from,
         }.items()
         if not value
     ]
@@ -434,24 +418,25 @@ def send_email(args: argparse.Namespace, subject: str, body: str) -> None:
         print(f"邮件未发送，缺少配置：{', '.join(missing)}", file=sys.stderr, flush=True)
         return
 
-    sender = args.email_from or args.smtp_username
-    message = EmailMessage()
-    message["Subject"] = subject
-    message["From"] = sender
-    message["To"] = args.email_to
-    message.set_content(body, subtype="plain", charset="utf-8")
-
-    if args.smtp_ssl:
-        with smtplib.SMTP_SSL(args.smtp_host, args.smtp_port, timeout=30) as smtp:
-            smtp.login(args.smtp_username, args.smtp_password)
-            smtp.send_message(message)
-    else:
-        with smtplib.SMTP(args.smtp_host, args.smtp_port, timeout=30) as smtp:
-            if not args.smtp_no_tls:
-                smtp.starttls()
-            smtp.login(args.smtp_username, args.smtp_password)
-            smtp.send_message(message)
-    print(f"邮件已发送：{subject}", flush=True)
+    payload = {
+        "from": args.email_from,
+        "to": [item.strip() for item in args.email_to.split(",") if item.strip()],
+        "subject": subject,
+        "text": body,
+    }
+    request = Request(
+        RESEND_EMAIL_URL,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {args.resend_api_key}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        method="POST",
+    )
+    with urlopen(request, timeout=30) as response:
+        result = json.loads(response.read().decode("utf-8", errors="replace"))
+    print(f"邮件已通过 Resend 发送：{subject} ({result.get('id', 'no-id')})", flush=True)
 
 
 def write_outputs(data: NfpData, signal: RateSignal, output_dir: Path) -> None:
@@ -523,13 +508,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--payroll-threshold-k", type=float, default=50, help="Payroll surprise threshold in thousands.")
     parser.add_argument("--revision-threshold-k", type=int, default=50, help="Combined revision threshold in thousands.")
     parser.add_argument("--email-to", default=os.getenv("NFP_EMAIL_TO", ""), help="Recipient email address. Defaults to NFP_EMAIL_TO.")
-    parser.add_argument("--email-from", default=os.getenv("NFP_EMAIL_FROM", ""), help="Sender email address. Defaults to NFP_EMAIL_FROM or SMTP username.")
-    parser.add_argument("--smtp-host", default=os.getenv("SMTP_HOST", ""), help="SMTP host. Defaults to SMTP_HOST.")
-    parser.add_argument("--smtp-port", type=int, default=env_int("SMTP_PORT", 587), help="SMTP port. Defaults to SMTP_PORT or 587.")
-    parser.add_argument("--smtp-username", default=os.getenv("SMTP_USERNAME", ""), help="SMTP username. Defaults to SMTP_USERNAME.")
-    parser.add_argument("--smtp-password", default=os.getenv("SMTP_PASSWORD", ""), help="SMTP password or app password. Defaults to SMTP_PASSWORD.")
-    parser.add_argument("--smtp-ssl", action="store_true", default=env_bool("SMTP_SSL", False), help="Use SMTP over SSL, usually port 465.")
-    parser.add_argument("--smtp-no-tls", action="store_true", default=env_bool("SMTP_NO_TLS", False), help="Disable STARTTLS for non-SSL SMTP.")
+    parser.add_argument("--email-from", default=os.getenv("NFP_EMAIL_FROM", ""), help="Verified Resend sender. Defaults to NFP_EMAIL_FROM.")
+    parser.add_argument("--resend-api-key", default=os.getenv("RESEND_API_KEY", ""), help="Resend API key. Defaults to RESEND_API_KEY.")
     return parser.parse_args()
 
 
