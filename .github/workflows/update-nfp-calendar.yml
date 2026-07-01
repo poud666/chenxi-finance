@@ -22,16 +22,19 @@ jobs:
       - name: Update calendar from BLS schedule
         run: python scripts/update_nfp_release_dates.py
 
-      - name: Commit calendar update
+      - name: Update consensus expectations
+        run: python scripts/update_nfp_expectations.py
+
+      - name: Commit calendar and expectations update
         shell: bash
         run: |
-          if git diff --quiet -- .github/nfp_release_dates.json; then
-            echo "NFP calendar already up to date."
+          if git diff --quiet -- .github/nfp_release_dates.json .github/nfp_expectations.json; then
+            echo "NFP calendar and expectations already up to date."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/nfp_release_dates.json
-          git commit -m "chore: update NFP release calendar"
+          git add .github/nfp_release_dates.json .github/nfp_expectations.json
+          git commit -m "chore: update NFP calendar and expectations"
           git push

@@ -38,6 +38,9 @@ jobs:
     outputs:
       is_release_day: ${{ steps.calendar.outputs.is_release_day }}
       target_release: ${{ steps.calendar.outputs.target_release }}
+      expected_payrolls_k: ${{ steps.expectations.outputs.expected_payrolls_k }}
+      expected_unemployment: ${{ steps.expectations.outputs.expected_unemployment }}
+      expected_ahe_mom: ${{ steps.expectations.outputs.expected_ahe_mom }}
     steps:
       - uses: actions/checkout@v4
 
@@ -47,6 +50,16 @@ jobs:
 
       - id: calendar
         run: python scripts/is_nfp_release_day.py --github-output "$GITHUB_OUTPUT"
+
+      - id: expectations
+        if: github.event_name == 'workflow_dispatch' || steps.calendar.outputs.is_release_day == 'true'
+        run: |
+          target="${{ github.event.inputs.target_release || steps.calendar.outputs.target_release }}"
+          if [ -z "$target" ]; then
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python scripts/read_nfp_expectations.py --target-release "$target" --github-output "$GITHUB_OUTPUT"
 
   monitor:
     needs: gate
@@ -82,9 +95,9 @@ jobs:
         shell: bash
         run: |
           target="${{ github.event.inputs.target_release || needs.gate.outputs.target_release }}"
-          payrolls="${{ github.event.inputs.expected_payrolls_k || vars.NFP_EXPECTED_PAYROLLS_K }}"
-          unemployment="${{ github.event.inputs.expected_unemployment || vars.NFP_EXPECTED_UNEMPLOYMENT }}"
-          ahe_mom="${{ github.event.inputs.expected_ahe_mom || vars.NFP_EXPECTED_AHE_MOM }}"
+          payrolls="${{ github.event.inputs.expected_payrolls_k || vars.NFP_EXPECTED_PAYROLLS_K || needs.gate.outputs.expected_payrolls_k }}"
+          unemployment="${{ github.event.inputs.expected_unemployment || vars.NFP_EXPECTED_UNEMPLOYMENT || needs.gate.outputs.expected_unemployment }}"
+          ahe_mom="${{ github.event.inputs.expected_ahe_mom || vars.NFP_EXPECTED_AHE_MOM || needs.gate.outputs.expected_ahe_mom }}"
 
           args=(python nfp_monitor.py --watch --only-new --interval-seconds 5 --timeout-seconds 1200)
 

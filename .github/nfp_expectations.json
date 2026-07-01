@@ -1,0 +1,16 @@
+{
+  "source": "https://tradingeconomics.com/united-states/non-farm-payrolls",
+  "description": "NFP consensus expectations captured before release day.",
+  "expectations": [
+    {
+      "reference_month": "June 2026",
+      "expected_payrolls_k": 110.0,
+      "expected_unemployment": 4.3,
+      "expected_ahe_mom": 0.3,
+      "source": "https://tradingeconomics.com/united-states/non-farm-payrolls",
+      "captured_date_hk": "2026-07-01",
+      "captured_at_utc": "2026-07-01T17:56:25+00:00"
+    }
+  ],
+  "last_checked_hk": "2026-07-01"
+}
