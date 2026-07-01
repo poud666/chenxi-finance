@@ -12,3 +12,6 @@ node_modules/
 # 私密配置
 .env
 *.env.local
+state/
+outputs/
+outputs-test/

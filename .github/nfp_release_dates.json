@@ -1,0 +1,32 @@
+{
+  "source": "https://www.bls.gov/schedule/news_release/empsit.htm",
+  "timezone": "Asia/Hong_Kong",
+  "release_time_hk": "20:30",
+  "watch_start_hk": "20:28",
+  "dates": [
+    {
+      "release_date_hk": "2026-07-02",
+      "reference_month": "June 2026"
+    },
+    {
+      "release_date_hk": "2026-08-07",
+      "reference_month": "July 2026"
+    },
+    {
+      "release_date_hk": "2026-09-04",
+      "reference_month": "August 2026"
+    },
+    {
+      "release_date_hk": "2026-10-02",
+      "reference_month": "September 2026"
+    },
+    {
+      "release_date_hk": "2026-11-06",
+      "reference_month": "October 2026"
+    },
+    {
+      "release_date_hk": "2026-12-04",
+      "reference_month": "November 2026"
+    }
+  ]
+}

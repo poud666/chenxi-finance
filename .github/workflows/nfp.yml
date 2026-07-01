@@ -1,0 +1,105 @@
+name: NFP BLS Monitor
+
+on:
+  schedule:
+    # 20:28 Asia/Hong_Kong = 12:28 UTC. Wake during the usual NFP
+    # release window, then gate by the configured official calendar.
+    - cron: "28 12 1-8 * *"
+  workflow_dispatch:
+    inputs:
+      target_release:
+        description: 'Optional target release, for example "June 2026"'
+        required: false
+        default: ""
+      expected_payrolls_k:
+        description: "Consensus NFP forecast in thousands"
+        required: false
+        default: ""
+      expected_unemployment:
+        description: "Consensus unemployment-rate forecast, percent"
+        required: false
+        default: ""
+      expected_ahe_mom:
+        description: "Consensus average hourly earnings MoM forecast, percent"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      is_release_day: ${{ steps.calendar.outputs.is_release_day }}
+      target_release: ${{ steps.calendar.outputs.target_release }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - id: calendar
+        run: python scripts/is_nfp_release_day.py --github-output "$GITHUB_OUTPUT"
+
+  monitor:
+    needs: gate
+    if: github.event_name == 'workflow_dispatch' || needs.gate.outputs.is_release_day == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Restore NFP state
+        uses: actions/cache@v4
+        with:
+          path: state/
+          key: nfp-state-${{ github.run_id }}
+          restore-keys: |
+            nfp-state-
+
+      - name: Build command
+        id: command
+        shell: bash
+        run: |
+          target="${{ github.event.inputs.target_release || needs.gate.outputs.target_release }}"
+          payrolls="${{ github.event.inputs.expected_payrolls_k || vars.NFP_EXPECTED_PAYROLLS_K }}"
+          unemployment="${{ github.event.inputs.expected_unemployment || vars.NFP_EXPECTED_UNEMPLOYMENT }}"
+          ahe_mom="${{ github.event.inputs.expected_ahe_mom || vars.NFP_EXPECTED_AHE_MOM }}"
+
+          args=(python nfp_monitor.py --watch --only-new --interval-seconds 5 --timeout-seconds 1200)
+
+          if [ -n "$target" ]; then
+            args+=(--target-release "$target")
+          fi
+          if [ -n "$payrolls" ]; then
+            args+=(--expected-payrolls-k "$payrolls")
+          fi
+          if [ -n "$unemployment" ]; then
+            args+=(--expected-unemployment "$unemployment")
+          fi
+          if [ -n "$ahe_mom" ]; then
+            args+=(--expected-ahe-mom "$ahe_mom")
+          fi
+
+          printf '%q ' "${args[@]}" > command.txt
+          echo >> command.txt
+
+      - name: Run NFP monitor
+        shell: bash
+        run: bash -lc "$(cat command.txt)"
+
+      - name: Upload NFP output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nfp-output-${{ github.run_id }}
+          path: |
+            outputs/
+            state/
+          if-no-files-found: ignore
