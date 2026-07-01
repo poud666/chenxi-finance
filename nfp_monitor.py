@@ -521,7 +521,7 @@ def main() -> int:
             released, _, _ = run_once(args)
             if released or not args.watch:
                 return 0 if released else 2
-        except (URLError, TimeoutError, OSError) as exc:
+        except (URLError, TimeoutError, OSError, ValueError) as exc:
             print(f"抓取失败，稍后重试：{exc}", file=sys.stderr, flush=True)
             if not args.watch:
                 return 1
