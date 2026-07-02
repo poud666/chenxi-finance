@@ -6,6 +6,7 @@ Send the latest NFP raw-data and analysis Markdown files as two real emails.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import smtplib
 import ssl
@@ -31,6 +32,24 @@ def latest_file(output_dir: Path, pattern: str) -> Path:
     if not matches:
         raise FileNotFoundError(f"No file matched {output_dir / pattern}")
     return matches[0]
+
+
+def normalize_release(value: str) -> str:
+    return " ".join(value.strip().lower().split())
+
+
+def output_files(output_dir: Path) -> tuple[Path, Path, Path, str]:
+    json_file = latest_file(output_dir, "nfp-*.json")
+    stamp = json_file.stem.removeprefix("nfp-")
+    raw_file = output_dir / f"nfp-raw-{stamp}.md"
+    analysis_file = output_dir / f"nfp-analysis-{stamp}.md"
+    if not raw_file.exists():
+        raise FileNotFoundError(f"No raw Markdown file matched {raw_file}")
+    if not analysis_file.exists():
+        raise FileNotFoundError(f"No analysis Markdown file matched {analysis_file}")
+    payload = json.loads(json_file.read_text(encoding="utf-8"))
+    release_title = str(payload.get("data", {}).get("release_title", ""))
+    return json_file, raw_file, analysis_file, release_title
 
 
 def build_message(sender: str, to: list[str], subject: str, body: str) -> EmailMessage:
@@ -61,7 +80,8 @@ def smtp_send(message: EmailMessage, args: argparse.Namespace) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Send NFP output files through SMTP.")
-    parser.add_argument("--output-dir", default="outputs", help="Directory containing nfp-raw-*.md and nfp-analysis-*.md.")
+    parser.add_argument("--output-dir", default="outputs", help="Directory containing NFP output files.")
+    parser.add_argument("--expected-release", default="", help='Required target report title, for example "June 2026".')
     parser.add_argument("--email-to", default=env("NFP_EMAIL_TO", DEFAULT_RECIPIENTS), help="Comma-separated recipients.")
     parser.add_argument("--email-from", default=env("NFP_EMAIL_FROM") or env("NFP_SMTP_USERNAME"), help="Sender address.")
     parser.add_argument("--smtp-host", default=env("NFP_SMTP_HOST", "smtp.gmail.com"), help="SMTP host.")
@@ -79,9 +99,18 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    output_dir = Path(args.output_dir)
-    raw_file = latest_file(output_dir, "nfp-raw-*.md")
-    analysis_file = latest_file(output_dir, "nfp-analysis-*.md")
+    json_file, raw_file, analysis_file, release_title = output_files(Path(args.output_dir))
+
+    if not args.expected_release:
+        print("Refusing to send email because --expected-release is empty.", file=sys.stderr)
+        return 3
+    if normalize_release(release_title) != normalize_release(args.expected_release):
+        print(
+            f"Refusing to send email: output {json_file.name} is {release_title!r}, "
+            f"expected {args.expected_release!r}.",
+            file=sys.stderr,
+        )
+        return 3
 
     to = recipients(args.email_to)
     sender = args.email_from or ("dry-run@example.invalid" if args.dry_run else "")
@@ -95,11 +124,14 @@ def main() -> int:
 
     raw_body = raw_file.read_text(encoding="utf-8")
     analysis_body = analysis_file.read_text(encoding="utf-8")
-    raw_message = build_message(sender, to, "美国非农原始数据快报", raw_body)
-    analysis_message = build_message(sender, to, "美国非农降息预期分析", analysis_body)
+    raw_message = build_message(sender, to, "\u7f8e\u56fd\u975e\u519c\u539f\u59cb\u6570\u636e\u5feb\u62a5", raw_body)
+    analysis_message = build_message(sender, to, "\u7f8e\u56fd\u975e\u519c\u964d\u606f\u9884\u671f\u5206\u6790", analysis_body)
 
     if args.dry_run:
-        print(f"Dry run OK: would send {raw_file.name} and {analysis_file.name} to {', '.join(to)}")
+        print(
+            f"Dry run OK: {release_title} matches {args.expected_release}; "
+            f"would send {raw_file.name} and {analysis_file.name} to {', '.join(to)}"
+        )
         return 0
 
     smtp_send(raw_message, args)

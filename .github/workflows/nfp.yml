@@ -137,8 +137,13 @@ jobs:
       - name: Send NFP email alerts
         shell: bash
         run: |
+          target="${{ github.event.inputs.target_release || needs.gate.outputs.target_release }}"
+          if [ -z "$target" ]; then
+            echo "Refusing to send email because target_release is empty." >&2
+            exit 3
+          fi
           email_dry_run="${{ github.event.inputs.email_dry_run || 'false' }}"
-          args=(python scripts/send_nfp_email.py --output-dir outputs)
+          args=(python scripts/send_nfp_email.py --output-dir outputs --expected-release "$target")
           if [ "$email_dry_run" = "true" ]; then
             args+=(--dry-run)
           fi
