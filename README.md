@@ -57,7 +57,18 @@ Register-ScheduledTask -TaskName "NFP_BLS_Watch" -Action $Action -Trigger $Trigg
 - `NFP_EXPECTED_PAYROLLS_K`
 - `NFP_EXPECTED_UNEMPLOYMENT`
 - `NFP_EXPECTED_AHE_MOM`
-抓到目标月份数据后，workflow 会创建一个 GitHub Issue，正文是原始数据；随后追加一条 issue comment，内容是降息预期分析。只要你的 GitHub 账号开启仓库通知并 watch 这个仓库，GitHub 会把 issue/comment 通知发到你的邮箱。这个方案不需要 Resend、SMTP、发件域名或额外 API key。工作流产物也会上传为 GitHub Actions artifact，包含 `outputs/` 和 `state/`。
+- `NFP_EMAIL_TO`：收件人，多个邮箱用英文逗号分隔；默认是 `lbs20060607@gmail.com,kyo1143845969@gmail.com`
+- `NFP_EMAIL_FROM`：发件人；不填时默认使用 `NFP_SMTP_USERNAME`
+- `NFP_SMTP_HOST`：SMTP 服务器，默认 `smtp.gmail.com`
+- `NFP_SMTP_PORT`：SMTP 端口，默认 `587`
+- `NFP_SMTP_SSL`：如使用 465 SSL 端口则设为 `true`，默认 `false`
+
+在 `Settings -> Secrets and variables -> Actions -> Secrets` 里设置：
+
+- `NFP_SMTP_USERNAME`：SMTP 登录用户名，通常是发件邮箱
+- `NFP_SMTP_PASSWORD`：SMTP 密码或 App Password
+
+抓到目标月份数据后，workflow 会通过 SMTP 发送两封真实邮件：第一封是原始非农数据，第二封是降息预期分析。工作流产物也会上传为 GitHub Actions artifact，包含 `outputs/` 和 `state/`。
 
 ## 市场预期
 

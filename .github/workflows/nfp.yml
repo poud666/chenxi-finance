@@ -24,10 +24,13 @@ on:
         description: "Consensus average hourly earnings MoM forecast, percent"
         required: false
         default: ""
+      email_to:
+        description: "Optional comma-separated recipient override"
+        required: false
+        default: ""
 
 permissions:
   contents: read
-  issues: write
 
 jobs:
   gate:
@@ -66,7 +69,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      GH_TOKEN: ${{ github.token }}
+      NFP_EMAIL_TO: ${{ github.event.inputs.email_to || vars.NFP_EMAIL_TO || 'lbs20060607@gmail.com,kyo1143845969@gmail.com' }}
+      NFP_EMAIL_FROM: ${{ vars.NFP_EMAIL_FROM || secrets.NFP_SMTP_USERNAME }}
+      NFP_SMTP_HOST: ${{ vars.NFP_SMTP_HOST || 'smtp.gmail.com' }}
+      NFP_SMTP_PORT: ${{ vars.NFP_SMTP_PORT || '587' }}
+      NFP_SMTP_USERNAME: ${{ secrets.NFP_SMTP_USERNAME }}
+      NFP_SMTP_PASSWORD: ${{ secrets.NFP_SMTP_PASSWORD }}
+      NFP_SMTP_SSL: ${{ vars.NFP_SMTP_SSL || 'false' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -113,20 +122,9 @@ jobs:
         shell: bash
         run: bash -lc "$(cat command.txt)"
 
-      - name: Create GitHub notification issue
+      - name: Send NFP email alerts
         shell: bash
-        run: |
-          raw_file="$(ls -t outputs/nfp-raw-*.md | head -n 1)"
-          analysis_file="$(ls -t outputs/nfp-analysis-*.md | head -n 1)"
-          title="NFP Alert: $(date -u +'%Y-%m-%d %H:%M UTC')"
-
-          issue_url="$(gh issue create \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "$title" \
-            --body-file "$raw_file")"
-
-          gh issue comment "$issue_url" --repo "$GITHUB_REPOSITORY" --body-file "$analysis_file"
-          echo "Created NFP notification issue: $issue_url"
+        run: python scripts/send_nfp_email.py --output-dir outputs
 
       - name: Upload NFP output
         if: always()
