@@ -24,13 +24,10 @@ on:
         description: "Consensus average hourly earnings MoM forecast, percent"
         required: false
         default: ""
-      email_to:
-        description: "Optional recipient email override"
-        required: false
-        default: ""
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   gate:
@@ -69,9 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      NFP_EMAIL_TO: ${{ github.event.inputs.email_to || vars.NFP_EMAIL_TO }}
-      NFP_EMAIL_FROM: ${{ vars.NFP_EMAIL_FROM }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
 
@@ -117,6 +112,21 @@ jobs:
       - name: Run NFP monitor
         shell: bash
         run: bash -lc "$(cat command.txt)"
+
+      - name: Create GitHub notification issue
+        shell: bash
+        run: |
+          raw_file="$(ls -t outputs/nfp-raw-*.md | head -n 1)"
+          analysis_file="$(ls -t outputs/nfp-analysis-*.md | head -n 1)"
+          title="NFP Alert: $(date -u +'%Y-%m-%d %H:%M UTC')"
+
+          issue_url="$(gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$title" \
+            --body-file "$raw_file")"
+
+          gh issue comment "$issue_url" --repo "$GITHUB_REPOSITORY" --body-file "$analysis_file"
+          echo "Created NFP notification issue: $issue_url"
 
       - name: Upload NFP output
         if: always()

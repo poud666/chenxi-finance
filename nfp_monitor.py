@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import sys
 import time
@@ -21,7 +20,6 @@ from urllib.request import Request, urlopen
 
 
 BLS_API_URL = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
-RESEND_EMAIL_URL = "https://api.resend.com/emails"
 DEFAULT_USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -314,144 +312,111 @@ def analyze_rate_signal(data: NfpData, args: argparse.Namespace) -> RateSignal:
     return RateSignal(direction=direction, score=score, confidence=confidence, reasons=reasons, missing_expectations=missing)
 
 
+def _value_or_unknown(value: Optional[object], suffix: str = "") -> str:
+    if value is None:
+        return "\u672a\u89e3\u6790\u5230"
+    return f"{value}{suffix}"
+
+
 def render_markdown(data: NfpData, signal: RateSignal) -> str:
-    payroll = f"{data.payrolls_k}k" if data.payrolls_k is not None else "未解析到"
-    unemployment = f"{data.unemployment_rate:g}%" if data.unemployment_rate is not None else "未解析到"
-    participation = (
-        f"{data.labor_force_participation_rate:g}%"
-        if data.labor_force_participation_rate is not None
-        else "未解析到"
+    unknown = _value_or_unknown(None)
+    payroll = _value_or_unknown(data.payrolls_k, "k")
+    unemployment = _value_or_unknown(f"{data.unemployment_rate:g}" if data.unemployment_rate is not None else None, "%")
+    participation = _value_or_unknown(
+        f"{data.labor_force_participation_rate:g}" if data.labor_force_participation_rate is not None else None,
+        "%",
     )
-    ahe_mom = (
-        f"{data.average_hourly_earnings_mom:g}%"
-        if data.average_hourly_earnings_mom is not None
-        else "未解析到"
+    ahe_mom = _value_or_unknown(
+        f"{data.average_hourly_earnings_mom:g}" if data.average_hourly_earnings_mom is not None else None,
+        "%",
     )
-    ahe_yoy = (
-        f"{data.average_hourly_earnings_yoy:g}%"
-        if data.average_hourly_earnings_yoy is not None
-        else "未解析到"
+    ahe_yoy = _value_or_unknown(
+        f"{data.average_hourly_earnings_yoy:g}" if data.average_hourly_earnings_yoy is not None else None,
+        "%",
     )
-    revision = f"{data.revision_combined_k:+d}k" if data.revision_combined_k is not None else "未解析到"
+    revision = _value_or_unknown(f"{data.revision_combined_k:+d}" if data.revision_combined_k is not None else None, "k")
     reasons = "\n".join(f"- {reason}" for reason in signal.reasons)
-    missing = "、".join(signal.missing_expectations) if signal.missing_expectations else "无"
+    missing = "\u3001".join(signal.missing_expectations) if signal.missing_expectations else "\u65e0"
 
-    return f"""# 美国非农快速解读
+    return f"""# \u7f8e\u56fd\u975e\u519c\u5feb\u901f\u89e3\u8bfb
 
-发布时间：{data.embargo_line or "未解析到"}
-报告月份：{data.release_title or "未解析到"}
-抓取时间 UTC：{data.fetched_at_utc}
-官方来源：{data.source_url}
+\u53d1\u5e03\u65f6\u95f4\uff1a{data.embargo_line or unknown}
+\u62a5\u544a\u6708\u4efd\uff1a{data.release_title or unknown}
+\u6293\u53d6\u65f6\u95f4 UTC\uff1a{data.fetched_at_utc}
+\u5b98\u65b9\u6765\u6e90\uff1a{data.source_url}
 
-## 核心数据
+## \u6838\u5fc3\u6570\u636e
 
-- 非农新增就业：{payroll}
-- 失业率：{unemployment}
-- 劳动参与率：{participation}
-- 平均时薪环比：{ahe_mom}
-- 平均时薪同比：{ahe_yoy}
-- 前两月合计修正：{revision}
+- \u975e\u519c\u65b0\u589e\u5c31\u4e1a\uff1a{payroll}
+- \u5931\u4e1a\u7387\uff1a{unemployment}
+- \u52b3\u52a8\u53c2\u4e0e\u7387\uff1a{participation}
+- \u5e73\u5747\u65f6\u85aa\u73af\u6bd4\uff1a{ahe_mom}
+- \u5e73\u5747\u65f6\u85aa\u540c\u6bd4\uff1a{ahe_yoy}
+- \u524d\u4e24\u6708\u5408\u8ba1\u4fee\u6b63\uff1a{revision}
 
-## 降息预期判断
+## \u964d\u606f\u9884\u671f\u5224\u65ad
 
-结论：**{signal.direction}**
-置信度：{signal.confidence}
-打分：{signal.score}
+\u7ed3\u8bba\uff1a**{signal.direction}**
+\u7f6e\u4fe1\u5ea6\uff1a{signal.confidence}
+\u6253\u5206\uff1a{signal.score}
 
 {reasons}
 
-缺少的市场预期输入：{missing}
+\u7f3a\u5c11\u7684\u5e02\u573a\u9884\u671f\u8f93\u5165\uff1a{missing}
 """
 
 
 def render_raw_markdown(data: NfpData) -> str:
-    payroll = f"{data.payrolls_k}k" if data.payrolls_k is not None else "未解析到"
-    unemployment = f"{data.unemployment_rate:g}%" if data.unemployment_rate is not None else "未解析到"
-    participation = (
-        f"{data.labor_force_participation_rate:g}%"
-        if data.labor_force_participation_rate is not None
-        else "未解析到"
+    unknown = _value_or_unknown(None)
+    payroll = _value_or_unknown(data.payrolls_k, "k")
+    unemployment = _value_or_unknown(f"{data.unemployment_rate:g}" if data.unemployment_rate is not None else None, "%")
+    participation = _value_or_unknown(
+        f"{data.labor_force_participation_rate:g}" if data.labor_force_participation_rate is not None else None,
+        "%",
     )
-    ahe_mom = (
-        f"{data.average_hourly_earnings_mom:g}%"
-        if data.average_hourly_earnings_mom is not None
-        else "未解析到"
+    ahe_mom = _value_or_unknown(
+        f"{data.average_hourly_earnings_mom:g}" if data.average_hourly_earnings_mom is not None else None,
+        "%",
     )
-    ahe_yoy = (
-        f"{data.average_hourly_earnings_yoy:g}%"
-        if data.average_hourly_earnings_yoy is not None
-        else "未解析到"
+    ahe_yoy = _value_or_unknown(
+        f"{data.average_hourly_earnings_yoy:g}" if data.average_hourly_earnings_yoy is not None else None,
+        "%",
     )
-    revision = f"{data.revision_combined_k:+d}k" if data.revision_combined_k is not None else "未解析到"
+    revision = _value_or_unknown(f"{data.revision_combined_k:+d}" if data.revision_combined_k is not None else None, "k")
 
-    return f"""# 美国非农原始数据快报
+    return f"""# \u7f8e\u56fd\u975e\u519c\u539f\u59cb\u6570\u636e\u5feb\u62a5
 
-发布时间：{data.embargo_line or "未解析到"}
-报告月份：{data.release_title or "未解析到"}
-抓取时间 UTC：{data.fetched_at_utc}
-官方来源：{data.source_url}
+\u53d1\u5e03\u65f6\u95f4\uff1a{data.embargo_line or unknown}
+\u62a5\u544a\u6708\u4efd\uff1a{data.release_title or unknown}
+\u6293\u53d6\u65f6\u95f4 UTC\uff1a{data.fetched_at_utc}
+\u5b98\u65b9\u6765\u6e90\uff1a{data.source_url}
 
-## 核心数据
+## \u6838\u5fc3\u6570\u636e
 
-- 非农新增就业：{payroll}
-- 失业率：{unemployment}
-- 劳动参与率：{participation}
-- 平均时薪环比：{ahe_mom}
-- 平均时薪同比：{ahe_yoy}
-- 前两月合计修正：{revision}
+- \u975e\u519c\u65b0\u589e\u5c31\u4e1a\uff1a{payroll}
+- \u5931\u4e1a\u7387\uff1a{unemployment}
+- \u52b3\u52a8\u53c2\u4e0e\u7387\uff1a{participation}
+- \u5e73\u5747\u65f6\u85aa\u73af\u6bd4\uff1a{ahe_mom}
+- \u5e73\u5747\u65f6\u85aa\u540c\u6bd4\uff1a{ahe_yoy}
+- \u524d\u4e24\u6708\u5408\u8ba1\u4fee\u6b63\uff1a{revision}
 """
 
 
-def send_email(args: argparse.Namespace, subject: str, body: str) -> None:
-    if not args.email_to:
-        return
-
-    missing = [
-        name
-        for name, value in {
-            "RESEND_API_KEY": args.resend_api_key,
-            "NFP_EMAIL_FROM": args.email_from,
-        }.items()
-        if not value
-    ]
-    if missing:
-        print(f"邮件未发送，缺少配置：{', '.join(missing)}", file=sys.stderr, flush=True)
-        return
-
-    payload = {
-        "from": args.email_from,
-        "to": [item.strip() for item in args.email_to.split(",") if item.strip()],
-        "subject": subject,
-        "text": body,
-    }
-    request = Request(
-        RESEND_EMAIL_URL,
-        data=json.dumps(payload).encode("utf-8"),
-        headers={
-            "Authorization": f"Bearer {args.resend_api_key}",
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        },
-        method="POST",
-    )
-    with urlopen(request, timeout=30) as response:
-        result = json.loads(response.read().decode("utf-8", errors="replace"))
-    print(f"邮件已通过 Resend 发送：{subject} ({result.get('id', 'no-id')})", flush=True)
-
-
-def write_outputs(data: NfpData, signal: RateSignal, output_dir: Path) -> None:
+def write_outputs(data: NfpData, signal: RateSignal, output_dir: Path, raw_markdown: str, analysis_markdown: str) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     payload = {"data": asdict(data), "signal": asdict(signal)}
     (output_dir / f"nfp-{stamp}.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    (output_dir / f"nfp-{stamp}.md").write_text(render_markdown(data, signal), encoding="utf-8")
+    (output_dir / f"nfp-raw-{stamp}.md").write_text(raw_markdown, encoding="utf-8")
+    (output_dir / f"nfp-analysis-{stamp}.md").write_text(analysis_markdown, encoding="utf-8")
 
 
 def run_once(args: argparse.Namespace) -> tuple[bool, Optional[NfpData], Optional[RateSignal]]:
     data = extract_api_release(fetch_bls_api(), BLS_API_URL, args.state_file)
+    unknown_title = "\u672a\u77e5"
     if args.mark_current_seen:
         write_last_release(args.state_file, data)
-        print(f"已记录当前报告为已处理：{data.release_title or '未知'}", flush=True)
+        print(f"\u5df2\u8bb0\u5f55\u5f53\u524d\u62a5\u544a\u4e3a\u5df2\u5904\u7406\uff1a{data.release_title or unknown_title}", flush=True)
         return True, data, None
     if args.only_new:
         last_release = read_last_release(args.state_file)
@@ -461,32 +426,30 @@ def run_once(args: argparse.Namespace) -> tuple[bool, Optional[NfpData], Optiona
             else:
                 write_last_release(args.state_file, data)
                 print(
-                    f"首次运行，已记录当前报告为基线：{data.release_title or '未知'}，继续等待新报告。",
+                    f"\u9996\u6b21\u8fd0\u884c\uff0c\u5df2\u8bb0\u5f55\u5f53\u524d\u62a5\u544a\u4e3a\u57fa\u7ebf\uff1a{data.release_title or unknown_title}\uff0c\u7ee7\u7eed\u7b49\u5f85\u65b0\u62a5\u544a\u3002",
                     flush=True,
                 )
                 return False, data, None
         elif normalize_month_target(data.release_title) == normalize_month_target(last_release):
             write_last_release(args.state_file, data)
             print(
-                f"当前仍是已处理报告：{data.release_title or '未知'}，继续等待新报告。",
+                f"\u5f53\u524d\u4ecd\u662f\u5df2\u5904\u7406\u62a5\u544a\uff1a{data.release_title or unknown_title}\uff0c\u7ee7\u7eed\u7b49\u5f85\u65b0\u62a5\u544a\u3002",
                 flush=True,
             )
             return False, data, None
     if not is_target_release(data, args.target_release):
         print(
-            f"尚未更新到目标报告：当前是 {data.release_title or '未知'}，目标是 {args.target_release}",
+            f"\u5c1a\u672a\u66f4\u65b0\u5230\u76ee\u6807\u62a5\u544a\uff1a\u5f53\u524d\u662f {data.release_title or unknown_title}\uff0c\u76ee\u6807\u662f {args.target_release}",
             flush=True,
         )
         return False, data, None
     raw_markdown = render_raw_markdown(data)
-    send_email(args, f"美国非农原始数据：{data.release_title}", raw_markdown)
 
     signal = analyze_rate_signal(data, args)
     analysis_markdown = render_markdown(data, signal)
     print(analysis_markdown, flush=True)
-    send_email(args, f"美国非农降息预期判断：{signal.direction}", analysis_markdown)
     if args.output_dir:
-        write_outputs(data, signal, Path(args.output_dir))
+        write_outputs(data, signal, Path(args.output_dir), raw_markdown, analysis_markdown)
     if args.only_new:
         write_last_release(args.state_file, data)
     return True, data, signal
@@ -507,9 +470,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--expected-ahe-mom", type=float, default=None, help="Consensus average hourly earnings MoM forecast, percent.")
     parser.add_argument("--payroll-threshold-k", type=float, default=50, help="Payroll surprise threshold in thousands.")
     parser.add_argument("--revision-threshold-k", type=int, default=50, help="Combined revision threshold in thousands.")
-    parser.add_argument("--email-to", default=os.getenv("NFP_EMAIL_TO", ""), help="Recipient email address. Defaults to NFP_EMAIL_TO.")
-    parser.add_argument("--email-from", default=os.getenv("NFP_EMAIL_FROM", ""), help="Verified Resend sender. Defaults to NFP_EMAIL_FROM.")
-    parser.add_argument("--resend-api-key", default=os.getenv("RESEND_API_KEY", ""), help="Resend API key. Defaults to RESEND_API_KEY.")
     return parser.parse_args()
 
 
@@ -522,15 +482,14 @@ def main() -> int:
             if released or not args.watch:
                 return 0 if released else 2
         except (URLError, TimeoutError, OSError, ValueError) as exc:
-            print(f"抓取失败，稍后重试：{exc}", file=sys.stderr, flush=True)
+            print(f"\u6293\u53d6\u5931\u8d25\uff0c\u7a0d\u540e\u91cd\u8bd5\uff1a{exc}", file=sys.stderr, flush=True)
             if not args.watch:
                 return 1
 
         if time.monotonic() - start >= args.timeout_seconds:
-            print("监控超时：目标报告仍未出现在 BLS 当前发布页。", file=sys.stderr, flush=True)
+            print("\u76d1\u63a7\u8d85\u65f6\uff1a\u76ee\u6807\u62a5\u544a\u4ecd\u672a\u51fa\u73b0\u5728 BLS \u5f53\u524d\u53d1\u5e03\u9875\u3002", file=sys.stderr, flush=True)
             return 3
         time.sleep(args.interval_seconds)
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

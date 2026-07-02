@@ -57,14 +57,7 @@ Register-ScheduledTask -TaskName "NFP_BLS_Watch" -Action $Action -Trigger $Trigg
 - `NFP_EXPECTED_PAYROLLS_K`
 - `NFP_EXPECTED_UNEMPLOYMENT`
 - `NFP_EXPECTED_AHE_MOM`
-- `NFP_EMAIL_TO`
-- `NFP_EMAIL_FROM`，必须是 Resend 已验证的发件人，例如 `Nonfarm Alerts <alerts@yourdomain.com>`
-
-在 `Settings -> Secrets and variables -> Actions -> Secrets` 里设置：
-
-- `RESEND_API_KEY`
-
-抓到目标月份数据后会先发一封原始数据邮件；完成降息预期判断后会再发一封分析邮件。邮件通过 Resend API 发送；如果没有设置 `RESEND_API_KEY`、`NFP_EMAIL_FROM` 或收件人，工作流仍会生成 artifact，但不会发邮件。工作流产物会上传为 GitHub Actions artifact，包含 `outputs/` 和 `state/`。
+抓到目标月份数据后，workflow 会创建一个 GitHub Issue，正文是原始数据；随后追加一条 issue comment，内容是降息预期分析。只要你的 GitHub 账号开启仓库通知并 watch 这个仓库，GitHub 会把 issue/comment 通知发到你的邮箱。这个方案不需要 Resend、SMTP、发件域名或额外 API key。工作流产物也会上传为 GitHub Actions artifact，包含 `outputs/` 和 `state/`。
 
 ## 市场预期
 
