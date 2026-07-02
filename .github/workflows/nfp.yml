@@ -28,6 +28,14 @@ on:
         description: "Optional comma-separated recipient override"
         required: false
         default: ""
+      force_current:
+        description: "Manual test only: analyze the current BLS release even if it was already seen"
+        required: false
+        default: "false"
+      email_dry_run:
+        description: "Manual test only: validate email files and recipients without sending"
+        required: false
+        default: "false"
 
 permissions:
   contents: read
@@ -99,8 +107,12 @@ jobs:
           payrolls="${{ github.event.inputs.expected_payrolls_k || needs.gate.outputs.expected_payrolls_k || vars.NFP_EXPECTED_PAYROLLS_K }}"
           unemployment="${{ github.event.inputs.expected_unemployment || needs.gate.outputs.expected_unemployment || vars.NFP_EXPECTED_UNEMPLOYMENT }}"
           ahe_mom="${{ github.event.inputs.expected_ahe_mom || needs.gate.outputs.expected_ahe_mom || vars.NFP_EXPECTED_AHE_MOM }}"
+          force_current="${{ github.event.inputs.force_current || 'false' }}"
 
-          args=(python nfp_monitor.py --watch --only-new --interval-seconds 5 --timeout-seconds 1200)
+          args=(python nfp_monitor.py --watch --interval-seconds 5 --timeout-seconds 1200)
+          if [ "$force_current" != "true" ]; then
+            args+=(--only-new)
+          fi
 
           if [ -n "$target" ]; then
             args+=(--target-release "$target")
@@ -124,7 +136,13 @@ jobs:
 
       - name: Send NFP email alerts
         shell: bash
-        run: python scripts/send_nfp_email.py --output-dir outputs
+        run: |
+          email_dry_run="${{ github.event.inputs.email_dry_run || 'false' }}"
+          args=(python scripts/send_nfp_email.py --output-dir outputs)
+          if [ "$email_dry_run" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          "${args[@]}"
 
       - name: Upload NFP output
         if: always()

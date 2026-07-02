@@ -70,6 +70,8 @@ Register-ScheduledTask -TaskName "NFP_BLS_Watch" -Action $Action -Trigger $Trigg
 
 抓到目标月份数据后，workflow 会通过 SMTP 发送两封真实邮件：第一封是原始非农数据，第二封是降息预期分析。工作流产物也会上传为 GitHub Actions artifact，包含 `outputs/` 和 `state/`。
 
+手动测试 workflow 时，可以把 `force_current` 设为 `true`，让它直接分析当前 BLS API 里已经公布的报告；把 `email_dry_run` 设为 `true`，则只验证邮件正文和收件人，不实际发送邮件。
+
 ## 市场预期
 
 降息预期判断需要三个预期值：

@@ -84,24 +84,19 @@ def main() -> int:
     analysis_file = latest_file(output_dir, "nfp-analysis-*.md")
 
     to = recipients(args.email_to)
-    missing = [
-        name
-        for name, value in {
-            "NFP_EMAIL_TO": to,
-            "NFP_EMAIL_FROM or NFP_SMTP_USERNAME": args.email_from,
-            "NFP_SMTP_USERNAME": args.smtp_username,
-            "NFP_SMTP_PASSWORD": args.smtp_password,
-        }.items()
-        if not value
-    ]
+    sender = args.email_from or ("dry-run@example.invalid" if args.dry_run else "")
+    required = {"NFP_EMAIL_TO": to, "NFP_EMAIL_FROM or NFP_SMTP_USERNAME": sender}
+    if not args.dry_run:
+        required.update({"NFP_SMTP_USERNAME": args.smtp_username, "NFP_SMTP_PASSWORD": args.smtp_password})
+    missing = [name for name, value in required.items() if not value]
     if missing:
         print(f"Missing email configuration: {', '.join(missing)}", file=sys.stderr)
         return 2
 
     raw_body = raw_file.read_text(encoding="utf-8")
     analysis_body = analysis_file.read_text(encoding="utf-8")
-    raw_message = build_message(args.email_from, to, "美国非农原始数据快报", raw_body)
-    analysis_message = build_message(args.email_from, to, "美国非农降息预期分析", analysis_body)
+    raw_message = build_message(sender, to, "美国非农原始数据快报", raw_body)
+    analysis_message = build_message(sender, to, "美国非农降息预期分析", analysis_body)
 
     if args.dry_run:
         print(f"Dry run OK: would send {raw_file.name} and {analysis_file.name} to {', '.join(to)}")
