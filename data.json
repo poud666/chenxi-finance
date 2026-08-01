@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-08-01T07:19:00.356956+00:00",
-  "updated_at_cn": "2026-08-01 15:19:00",
+  "updated_at": "2026-08-01T09:27:42.964859+00:00",
+  "updated_at_cn": "2026-08-01 17:27:42",
   "indicators": [
     {
       "name": "VIX",
@@ -130,8 +130,8 @@
       "name": "DXY",
       "name_cn": "美元指数",
       "sub": "美元强弱",
-      "value": 99.8,
-      "change": -1.39,
+      "value": 99.803,
+      "change": -1.387,
       "change_pct": -1.37,
       "unit": "",
       "status": "ok",
