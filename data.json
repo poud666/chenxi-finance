@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-08-09T16:38:50.793470+00:00",
-  "updated_at_cn": "2026-08-10 00:38:50",
+  "updated_at": "2026-08-09T17:18:02.637421+00:00",
+  "updated_at_cn": "2026-08-10 01:18:02",
   "indicators": [
     {
       "name": "VIX",
@@ -128,9 +128,9 @@
       "name": "DXY",
       "name_cn": "美元指数",
       "sub": "美元强弱",
-      "value": 99.604,
-      "change": -1.336,
-      "change_pct": -1.32,
+      "value": 99.539,
+      "change": -1.401,
+      "change_pct": -1.39,
       "unit": "",
       "status": "ok",
       "desc": "美元对一篮子主要货币的强弱。走强意味着全球流动性收紧、新兴市场承压。<b>>107 流动性紧张</b>。",
@@ -287,8 +287,8 @@
       "name": "KBW",
       "name_cn": "银行指数",
       "sub": "大型银行",
-      "value": 189.9919,
-      "change": 2.5419,
+      "value": 189.992,
+      "change": 2.542,
       "change_pct": 1.36,
       "unit": "",
       "status": "ok",
