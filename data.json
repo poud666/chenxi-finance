@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-03T12:06:43.573170+00:00",
-  "updated_at_cn": "2026-10-03 20:06:43",
+  "updated_at": "2026-10-03T16:20:35.828926+00:00",
+  "updated_at_cn": "2026-10-04 00:20:35",
   "indicators": [
     {
       "name": "VIX",
@@ -51,8 +51,8 @@
       "name": "MOVE",
       "name_cn": "债券波动率",
       "sub": "美债隐含波动率",
-      "value": 107.287,
-      "change": 27.577,
+      "value": 107.2868,
+      "change": 27.5768,
       "change_pct": 34.6,
       "unit": "",
       "status": "ok",
