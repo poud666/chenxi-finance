@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-04T13:34:44.314053+00:00",
-  "updated_at_cn": "2026-10-04 21:34:44",
+  "updated_at": "2026-10-04T17:51:25.067646+00:00",
+  "updated_at_cn": "2026-10-05 01:51:25",
   "indicators": [
     {
       "name": "VIX",
@@ -51,8 +51,8 @@
       "name": "MOVE",
       "name_cn": "债券波动率",
       "sub": "美债隐含波动率",
-      "value": 107.2868,
-      "change": 27.5768,
+      "value": 107.287,
+      "change": 27.577,
       "change_pct": 34.6,
       "unit": "",
       "status": "ok",
@@ -291,8 +291,8 @@
       "name": "KBW",
       "name_cn": "银行指数",
       "sub": "大型银行",
-      "value": 170.6925,
-      "change": -16.0775,
+      "value": 170.693,
+      "change": -16.077,
       "change_pct": -8.61,
       "unit": "",
       "status": "ok",
