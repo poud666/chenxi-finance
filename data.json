@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-11-23T21:14:51.200053+00:00",
-  "updated_at_cn": "2026-11-24 05:14:51",
+  "updated_at": "2026-11-24T05:23:06.146940+00:00",
+  "updated_at_cn": "2026-11-24 13:23:06",
   "indicators": [
     {
       "name": "VIX",
       "name_cn": "恐慌指数",
       "sub": "标普500隐含波动率",
-      "value": 27.22,
-      "change": 7.77,
-      "change_pct": 39.95,
+      "value": 26.62,
+      "change": 7.17,
+      "change_pct": 36.86,
       "unit": "",
       "status": "warn",
       "desc": "标普 500 未来 30 天的隐含波动率。数值越高，市场越恐慌。<b>>25 紧张 · >30 恐慌</b>。",
@@ -43,15 +43,15 @@
         24.56,
         28.44,
         35.89,
-        27.22
+        26.62
       ]
     },
     {
       "name": "MOVE",
       "name_cn": "债券波动率",
       "sub": "美债隐含波动率",
-      "value": 100.9178,
-      "change": -2.3922,
+      "value": 100.914,
+      "change": -2.396,
       "change_pct": -2.32,
       "unit": "",
       "status": "ok",
@@ -85,7 +85,7 @@
         98.15,
         96.04,
         106.31,
-        100.9178
+        100.91
       ]
     },
     {
@@ -136,9 +136,9 @@
       "name": "DXY",
       "name_cn": "美元指数",
       "sub": "美元强弱",
-      "value": 104.339,
-      "change": 2.529,
-      "change_pct": 2.48,
+      "value": 104.268,
+      "change": 2.458,
+      "change_pct": 2.41,
       "unit": "",
       "status": "ok",
       "desc": "美元对一篮子主要货币的强弱。走强意味着全球流动性收紧、新兴市场承压。<b>>107 流动性紧张</b>。",
@@ -152,7 +152,6 @@
         "alert": 110
       },
       "history": [
-        101.81,
         101.96,
         102.32,
         102.19,
@@ -173,7 +172,8 @@
         103.86,
         103.9,
         103.81,
-        104.339
+        104.32,
+        104.268
       ]
     },
     {
@@ -266,7 +266,7 @@
         27116.2598,
         26517.0508,
         25028.9805,
-        26746.0957
+        26746.0996
       ]
     },
     {
@@ -320,16 +320,16 @@
         166.93,
         163.78,
         158.67,
-        162.8486
+        162.85
       ]
     },
     {
       "name": "KRE",
       "name_cn": "区域银行",
       "sub": "ETF",
-      "value": 69.53,
-      "change": -2.93,
-      "change_pct": -4.04,
+      "value": 69.54,
+      "change": -2.92,
+      "change_pct": -4.03,
       "unit": "",
       "status": "ok",
       "desc": "中小银行 ETF。<b>对利率和商业地产暴露最大</b>，是地方性银行危机的先行指标。",
@@ -356,7 +356,7 @@
         70.52,
         69.26,
         68.32,
-        69.53
+        69.54
       ]
     },
     {
@@ -399,9 +399,9 @@
       "name": "SKEW",
       "name_cn": "尾部风险",
       "sub": "CBOE SKEW 指数",
-      "value": 138.84,
-      "change": -12.96,
-      "change_pct": -8.54,
+      "value": 140.37,
+      "change": -11.43,
+      "change_pct": -7.53,
       "unit": "",
       "status": "ok",
       "desc": "衡量标普 500 极端下跌的风险溢价。<b>>145 警惕</b>：期权市场为黑天鹅事件支付高溢价。100 = 正态分布。",
@@ -434,16 +434,17 @@
         145.11,
         142.84,
         140.86,
-        138.84
+        138.84,
+        140.37
       ]
     },
     {
       "name": "VVIX",
       "name_cn": "VIX 的 VIX",
       "sub": "波动率的波动率",
-      "value": 117.99,
-      "change": 8.29,
-      "change_pct": 7.56,
+      "value": 117.36,
+      "change": 7.66,
+      "change_pct": 6.98,
       "unit": "",
       "status": "ok",
       "desc": "VIX 本身的隐含波动率。<b>>130</b> 表示市场对 VIX 暴涨有预期，常先于 VIX 真正飙升。",
@@ -477,16 +478,16 @@
         118.37,
         127.1,
         138.03,
-        117.99
+        117.36
       ]
     },
     {
       "name": "VXN",
       "name_cn": "纳指 VIX",
       "sub": "纳斯达克100波动率",
-      "value": 36.7,
-      "change": 8.4,
-      "change_pct": 29.68,
+      "value": 36.31,
+      "change": 8.01,
+      "change_pct": 28.3,
       "unit": "",
       "status": "warn",
       "desc": "纳斯达克 100 的隐含波动率。<b>常高于 VIX</b>，反映科技股波动更大。两者差距扩大时科技股承压。",
@@ -520,15 +521,15 @@
         33.12,
         36.48,
         45.25,
-        36.7
+        36.31
       ]
     },
     {
       "name": "RSP/SPY",
       "name_cn": "市场广度",
       "sub": "等权 vs 市值加权",
-      "value": 3.22,
-      "change": 3.22,
+      "value": 3.24,
+      "change": 3.24,
       "change_pct": null,
       "unit": "%",
       "status": "ok",
@@ -570,27 +571,27 @@
         {
           "name": "可选消费",
           "sym": "XLY",
-          "change_pct": 3.41
+          "change_pct": 3.39
         },
         {
           "name": "必需消费",
           "sym": "XLP",
-          "change_pct": 2.41
+          "change_pct": 2.4
         },
         {
           "name": "公用事业",
           "sym": "XLU",
-          "change_pct": 1.74
+          "change_pct": 1.79
         },
         {
           "name": "房地产",
           "sym": "XLRE",
-          "change_pct": 0.82
+          "change_pct": 0.78
         },
         {
           "name": "医疗",
           "sym": "XLV",
-          "change_pct": 0.12
+          "change_pct": 0.08
         },
         {
           "name": "金融",
@@ -600,7 +601,7 @@
         {
           "name": "工业",
           "sym": "XLI",
-          "change_pct": -1.3
+          "change_pct": -1.31
         },
         {
           "name": "通信",
@@ -610,17 +611,17 @@
         {
           "name": "原材料",
           "sym": "XLB",
-          "change_pct": -2.79
+          "change_pct": -2.75
         },
         {
           "name": "科技",
           "sym": "XLK",
-          "change_pct": -11.35
+          "change_pct": -11.38
         },
         {
           "name": "能源",
           "sym": "XLE",
-          "change_pct": -13.67
+          "change_pct": -13.64
         }
       ]
     },
@@ -628,9 +629,9 @@
       "name": "VNQ",
       "name_cn": "REIT 综合 ETF",
       "sub": "商业地产",
-      "value": 93.665,
-      "change": 0.975,
-      "change_pct": 1.05,
+      "value": 93.67,
+      "change": 0.98,
+      "change_pct": 1.06,
       "unit": "",
       "status": "ok",
       "desc": "美国 REITs 综合 ETF。<b>商业地产暴跌</b>会冲击区域银行资产质量，是系统性风险传导链关键一环。",
@@ -657,16 +658,16 @@
         95.18,
         93.47,
         92.56,
-        93.665
+        93.67
       ]
     },
     {
       "name": "IYR",
       "name_cn": "REIT ETF",
       "sub": "iShares 房地产",
-      "value": 99.17,
-      "change": 0.77,
-      "change_pct": 0.78,
+      "value": 99.18,
+      "change": 0.78,
+      "change_pct": 0.79,
       "unit": "",
       "status": "ok",
       "desc": "iShares 美国房地产 ETF，与 VNQ 互相印证。同步暴跌时警惕地产链系统性风险。",
@@ -693,7 +694,7 @@
         100.62,
         98.9,
         98.04,
-        99.17
+        99.18
       ]
     },
     {
@@ -737,12 +738,12 @@
     "name": "Fear & Greed",
     "name_cn": "恐慌贪婪指数",
     "sub": "CNN 综合情绪",
-    "value": 16.7,
+    "value": 17.0,
     "rating": "extreme fear",
-    "prev_close": 9.7,
-    "prev_1_week": 31.1,
+    "prev_close": 17.0,
+    "prev_1_week": 26.0,
     "prev_1_month": 16.7,
-    "prev_1_year": 5.7,
+    "prev_1_year": 13.7,
     "status": "warn",
     "desc": "综合 7 个子指标（动量、波动率、安全资产需求、垃圾债需求、Put/Call 比率、广度、看涨期权）。<b>极度恐慌时往往是底部</b>，<b>极度贪婪时往往临近顶部</b>。",
     "category": "sentiment"
